@@ -2,14 +2,44 @@
 
 set -e
 
-echo "* $0"
+clear
+
+# set colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+purple=$(tput setaf 5)
+cyan=$(tput setaf 6)
+white=$(tput setaf 7)
+reset=$(tput sgr0)
+
+echo "       ${green} Snoopy and ${yellow}PRICKLY PETE!"
+
+[[ $quiet ]] && return
+echo "${red}"
+echo '               _|\ _/|_,'
+echo '             ,((\\``-\\\\_'
+echo '           ,(())      `))\'
+echo '         ,(()))       ,_ \'
+echo '        ((())    |        \'
+echo '        )))))     >.__     \'
+echo '        (((       /   --. .c|'
+echo '                 /       --'
+echo "${reset}"
+echo "${cyan}'All right, we're taking it up a notch!'${reset}"; echo
 ##################################################################################
 #### source variables
+echo "* Starting"
 echo "  - variables..."
 if [ ! -f 'config.cfg' ]; then
   	echo "$0 needs config.cfg, copy the config.cfg.example to config.cfg, edit it and run again"
 fi
 . config.cfg
+
+#### run_as runs certain tasks as as $luser (a non-privledged user)
+echo "  - runas..."
+run_as="sudo -u $luser"
 
 #### reset
 if [ "$1" == "reset" ]; then
@@ -84,10 +114,6 @@ log_dir=/opt/$luser/logs
 mkdir -p $log_dir
 chown $luser:$luser $log_dir
 
-#### run_as runs certain tasks as as $luser (a non-privledged user)
-echo "  - runas..."
-run_as="sudo -u $luser"
-
 ##################################################################################
 echo "++++++++++++++++++++++++++++++"
 hp=cowrie
@@ -102,23 +128,25 @@ git clone https://github.com/micheloosterhof/cowrie.git
 _
 fi
 
+if [ ! -f "/home/$luser/$hp/$hp.cfg" ]; then
 echo "  - config"
 cp src/configs/$hp.cfg /home/$luser/$hp
 echo "log_path = $log_dir/$hp
 [output_jsonlog]
 logfile = $log_dir/$hp/$hp.json" >> /home/$luser/$hp/$hp.cfg
 chown -R $luser:$luser /home/$luser/$hp
+fi
 
-echo "  - logdir"
 if [ ! -d "$log_dir/$hp" ]; then
+	echo "  - logdir"
 	mkdir $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
-echo "  - start"
 if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
 else
+echo "  - start"
 $run_as bash<<_
 cd /home/$luser/$hp
 sh start.sh >> /dev/null
@@ -139,16 +167,16 @@ git clone https://github.com/knalli/honeypot-for-tcp-32764.git
 _
 fi
 
-echo "  - logdir"
 if [ ! -d "$log_dir/$hp" ]; then
+	echo "  - logdir"
 	mkdir $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
-echo "  - start"
 if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
 else
+echo "  - start"
 $run_as bash<<_
 cd /home/$luser/$hp
 npm install
@@ -164,14 +192,14 @@ echo "++++++++++++++++++++++++++++++"
 hp=glastopf
 echo -n "+ $hp - "
 echo "a web application honeypot"
-echo "  - install"
 if [ ! -f "/usr/local/bin/glastopf-runner" ]; then
+	echo "  - install"
 	pip install --upgrade greenlet
 	pip install glastopf
 fi
 
-echo "  - workdir"
 if [ ! -d "/home/$luser/glastopf" ]; then
+	echo "  - workdir"
 	mkdir /home/$luser/$hp
 	cp src/configs/glastopf.cfg /home/$luser/$hp
 	echo "logfile = $log_dir/$hp/glastopf.log" >> /home/$luser/$hp/glastopf.cfg
@@ -190,16 +218,16 @@ connection_string = sqlite:///$log_dir/$hp/glastopf.db" >> /home/$luser/$hp/glas
 	chown -R $luser:$luser /home/$luser/$hp
 fi
 
-echo "  - logdir"
 if [ ! -d "$log_dir/$hp" ]; then
+	echo "  - logdir"
 	mkdir $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
-echo "  - start"
 if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
 else
+echo "  - start"
 #$run_as bash<<_
 cd /home/$luser/$hp
 python /usr/local/bin/glastopf-runner > /dev/null 2>&1 &
@@ -231,16 +259,16 @@ user = $luser
 group = $luser" >> /home/$luser/$hp/$hp.cfg
 chown -R $luser:$luser /home/$luser/$hp
 
-echo "  - logdir"
 if [ ! -d "$log_dir/$hp" ]; then
+	echo "  - logdir"
 	mkdir $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
-echo "  - start"
 if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
 else
+echo "  - start"
 nohup conpot --config /home/$luser/$hp/$hp.cfg --logfile $log_dir/$hp/$hp.log --template kamstrup_382 &
 sleep 2
 echo $(ps -fe | grep "$hp" | head -n1 | awk '{print $2}') > /home/$luser/$hp/$hp.pid
@@ -249,6 +277,7 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
+echo "++++++++++++++++++++++++++++++"
 exit 0
 
 
@@ -288,3 +317,5 @@ _
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 ##################################################################################
 exit 0
+
+

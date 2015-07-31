@@ -78,7 +78,7 @@ __George:__ "You want to hear more? The master bedroom opens into the solarium."
 
 __Mr. Ross:__ "Another solarium?"
 
-__George:__ "Yes, two solariums. Quite a find. And I have horses, too?"
+__George:__ "Yes, two solariums. Quite a find. And I have horses, too."
 
 ![](src/imgs/snoopy_and_prickly_pete.jpg)
 
