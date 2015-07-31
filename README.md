@@ -1,5 +1,5 @@
 # prickly-pete
-A setup script to bring up a box laden with various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it could be useful for research, testing for bug in a network or other interesting things. 
+A setup script to bring up a box laden with various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it sould be useful for research and reconnaissance to test networks for infestations. 
 
 ## Usage
 
@@ -19,38 +19,69 @@ And you're ready to go, feel free to look things over, edit `config.cfg` if you 
 
 ### See what you can see
 
-* glastopf
-
-```
-curl localhost
-```
-
-_or view in a browser_
-
-* cowrie
+* cowrie - `ssh` to the port, logging in as root (yes, the password can be blank)
 
 ```
 ssh localhost -p 22 -l root
 ```
 
-_password can be blank_
+* glastopf - use `curl` against the port to see what it returns 
+
+```
+curl localhost
+```
+
+or point a browser to [http://localhost/](http://localhost/)
+
+* honeypot-for-tcp-32764 - run `nmap` against the port to see that it's open (need to figure out what else it can tell us)
+
+```
+# nmap -p 32764 localhost
+
+Starting Nmap 6.47 ( http://nmap.org ) at 2015-07-31 14:33 GMT
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000034s latency).
+Other addresses for localhost (not scanned): 127.0.0.1
+PORT      STATE SERVICE
+32764/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 1.03 seconds
+```
+
+* contpot - ssh to the port (note that the MAC address can be changed in the config for further confusion)
+
+```
+$ curl localhost:50100
+Welcome...
+Connected to [00:13:EA:00:00:00]
+
+? Command not found.
+Send 'H' for help.
+```
 
 ## Silly
 
-George, driving in the car with the Rosses: "And that leads into the master
-bedroom."
+_George, driving in the car with the Rosses:_ "And that leads into the master bedroom."
+
 __Mrs. Ross:__ "Tell us more."
+
 __George:__ "You want to hear more? The master bedroom opens into the solarium."
+
 __Mr. Ross:__ "Another solarium?"
+
 __George:__ "Yes, two solariums. Quite a find. And I have horses, too?"
 
 ![](src/imgs/snoopy_and_prickly_pete.jpg)
 
 __Mr. Ross:__ "What are their names?"
+
 __George:__ "Snoopy and Prickly Pete. Should I keep driving?"
-__Mrs. Ross:__ "Oh, look, an antique stand. Pull over. We'll buy you a
+
+__Mrs. Ross:__ "Oh, look, an antique stand. Pull over. We'll buy you a 
 housewarming gift."
+
 __George, chuckling to himself:__ "Housewarming gift."
+
 __George, swerving the car to go to the antique stand:__ "All right, we're taking
 it up a notch!"
 

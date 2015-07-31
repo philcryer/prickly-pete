@@ -1,1 +1,1 @@
-sudo git curl python-twisted nodejs npm python-mysqldb python-lxml-dbg python-lxml python-pip python-dev libsmi2ldbl libsnmp-base python-dev libevent-dev libxslt1-dev libxml2-dev
+sudo git curl nmap python-twisted nodejs npm python-mysqldb python-lxml-dbg python-lxml python-pip python-dev libsmi2ldbl libsnmp-base python-dev libevent-dev libxslt1-dev libxml2-dev
