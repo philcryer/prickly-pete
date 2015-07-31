@@ -4,8 +4,8 @@ A setup script to bring up a box laden with various honeypots running as many ex
 ## Usage
 
 ```
-git clone https://github.com/philcryer/holy-box.git
-cd holy-box
+git clone https://github.com/philcryer/prickly-pete.git
+cd prickly-pete
 cp config.cfg.example config.cfg
 ```
 
