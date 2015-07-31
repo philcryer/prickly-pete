@@ -30,7 +30,7 @@ echo "${reset}"
 echo "${cyan}'All right, we're taking it up a notch!'${reset}"; echo
 ##################################################################################
 #### source variables
-echo "* Starting"
+echo "${purple}Starting${reset}"
 echo "  - variables..."
 if [ ! -f 'config.cfg' ]; then
   	echo "$0 needs config.cfg, copy the config.cfg.example to config.cfg, edit it and run again"
@@ -115,7 +115,7 @@ mkdir -p $log_dir
 chown $luser:$luser $log_dir
 
 ##################################################################################
-echo "++++++++++++++++++++++++++++++"
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=cowrie
 echo -n "+ $hp - "
 echo "an SSH honeypot based on Kippo, logs attacks, shell interaction of the attacker"
@@ -155,7 +155,7 @@ _
 fi
 
 ##################################################################################
-echo "++++++++++++++++++++++++++++++"
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=honeypot-for-tcp-32764
 echo -n "+ $hp - "
 echo "a router backdoor found in late model consumer router firmwares"
@@ -188,7 +188,7 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
-echo "++++++++++++++++++++++++++++++"
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=glastopf
 echo -n "+ $hp - "
 echo "a web application honeypot"
@@ -239,7 +239,7 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
-echo "++++++++++++++++++++++++++++++"
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=conpot 
 echo -n "+ $hp - "
 echo "a ICS/SCADA honeypot to collect attacks against industrial control systems"
@@ -277,7 +277,7 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
-echo "++++++++++++++++++++++++++++++"
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 exit 0
 
 
