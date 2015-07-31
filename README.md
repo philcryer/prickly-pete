@@ -61,7 +61,7 @@ Send 'H' for help.
 
 ## Silly
 
-_George, driving in the car with the Rosses:_ "And that leads into the master bedroom."
+__George,__ _driving in the car with the Rosses:_ "And that leads into the master bedroom."
 
 __Mrs. Ross:__ "Tell us more."
 
@@ -80,9 +80,9 @@ __George:__ "Snoopy and Prickly Pete. Should I keep driving?"
 __Mrs. Ross:__ "Oh, look, an antique stand. Pull over. We'll buy you a 
 housewarming gift."
 
-__George, chuckling to himself:__ "Housewarming gift."
+__George,__ _chuckling to himself:_ "Housewarming gift."
 
-__George, swerving the car to go to the antique stand:__ "All right, we're taking
+__George,__ _swerving the car to go to the antique stand:_ "All right, we're taking
 it up a notch!"
 
 ## License
