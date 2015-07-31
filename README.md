@@ -8,7 +8,7 @@ prickly-pete currently brings up the following honeypots, automatically, with no
 * [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster).
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
-* [contpot](https://pypi.python.org/pypi/Conpot) - Conpot is an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
+* [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
 
 ## Usage
 
