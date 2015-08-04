@@ -41,6 +41,61 @@ fi
 echo "  - runas..."
 run_as="sudo -u $luser"
 
+#### running
+if [ "$1" == "running" ]; then
+	echo "  - are any running..."
+	echo "  --------------------"
+	ps -fe|grep $luser|grep -v grep
+	echo "  --------------------"
+	echo "  - are there any pids..."
+	find /home/$luser -name "*.pid"
+	echo "  --------------------"
+	exit 0
+fi
+
+#### pids
+if [ "$1" == "pids" ]; then
+	echo "  - are there any pids..."
+	find /home/$luser -name "*.pid"
+	echo "  --------------------"
+	exit 0
+fi
+
+#### stop
+if [ "$1" == "stop" ]; then
+	echo "  - stop app..."
+	if [ -f "/home/$luser/conpot/conpot.pid" ]; then
+		echo "    * stop conpot"
+		kill `cat /home/$luser/conpot/conpot.pid`
+		rm /home/$luser/conpot/conpot.pid
+	fi
+if [ -f "/home/$luser/cowrie/cowrie.pid" ]; then
+	echo "    * stop cowrie"
+	#kill `cat /home/$luser/cowrie/*.pid`
+	killall twistd
+	rm /home/$luser/cowrie/*.pid
+fi
+if [ -f "/home/$luser/glastopf/glastopf.pid" ]; then
+	echo "    * stop glastopf"
+	kill `cat /home/$luser/glastopf/*.pid`
+	rm /home/$luser/glastopf/*.pid
+fi
+if [ -f "/home/$luser/honeypot-for-tcp-32764/honeypot-for-tcp-32764.pid" ]; then
+	echo "    * stop honeypot-for-tcp-32764"
+	forver=$(ps -fe | grep "forever" | head -n1 | awk '{print $2}')
+	kill $forever
+	if [ -f "/home/$luser/.forever/pids/*.pid" ]; then
+		rm /home/$luser/.forever/pids/*.pid
+	fi
+	sleep 2
+	kill `cat /home/$luser/honeypot-for-tcp-32764/*.pid`
+	rm /home/$luser/honeypot-for-tcp-32764/*.pid
+fi
+	echo "  - that should do it, take a look..."
+	ps -fe|grep $luser|grep -v grep
+	exit 0
+fi
+
 #### reset
 if [ "$1" == "reset" ]; then
 	echo "+ RESET"
@@ -63,8 +118,8 @@ if [ "$1" == "reset" ]; then
 	userdel $luser
 	echo "  - homedir..."
 	rm -rf /home/$luser
-	echo "  - logdir..."
-	rm -rf /opt/$luser
+	#echo "  - logdir..."
+	#rm -rf /opt/$luser
 	exit 0
 fi
 
@@ -110,10 +165,12 @@ fi
 
 #### setup persistant log directory owned by $luser
 echo "  - logdir..."
-log_dir=/opt/$luser/logs
+log_dir=/opt/prickly-pete/logs
 mkdir -p $log_dir
-chown $luser:$luser $log_dir
+#chown $luser:$luser $log_dir
+chown -R $luser:$luser /opt/prickly-pete
 
+##################################################################################
 ##################################################################################
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=cowrie
@@ -139,19 +196,27 @@ fi
 
 if [ ! -d "$log_dir/$hp" ]; then
 	echo "  - logdir"
-	mkdir $log_dir/$hp
-	chown $luser:$luser $log_dir/$hp
+	mkdir -p $log_dir/$hp
+	chown -R $luser:$luser $log_dir/$hp
 fi
 
 if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
 else
+
+#touch /opt/prickly-pete/logs/cowrie/cowrie.json
+
 echo "  - start"
+#touch /home/$luser/cowrie/cowrie.pid
+#chown -R $luser:$luser /home/$luser/$hp
+
 $run_as bash<<_
 cd /home/$luser/$hp
 sh start.sh >> /dev/null
-echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
+echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1
+echo $(ps -fe | grep "$hp" | head -n1 | awk '{print $2}') > $hp.pid
 _
+echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
@@ -169,7 +234,7 @@ fi
 
 if [ ! -d "$log_dir/$hp" ]; then
 	echo "  - logdir"
-	mkdir $log_dir/$hp
+	mkdir -p $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
@@ -220,7 +285,7 @@ fi
 
 if [ ! -d "$log_dir/$hp" ]; then
 	echo "  - logdir"
-	mkdir $log_dir/$hp
+	mkdir -p $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
@@ -250,10 +315,11 @@ if [ ! -d "/home/$luser/$hp/.git" ]; then
 $run_as bash<<_
 cd /home/$luser
 git clone https://github.com/mushorg/conpot.git
+cp src/configs/conpot.cfg /home/$luser/$hp
 _
 fi
 
-cp src/configs/conpot.cfg /home/$luser/$hp
+#cp src/configs/conpot.cfg /home/$luser/$hp
 echo "[daemon]
 user = $luser
 group = $luser" >> /home/$luser/$hp/$hp.cfg
@@ -261,7 +327,7 @@ chown -R $luser:$luser /home/$luser/$hp
 
 if [ ! -d "$log_dir/$hp" ]; then
 	echo "  - logdir"
-	mkdir $log_dir/$hp
+	mkdir -p $log_dir/$hp
 	chown $luser:$luser $log_dir/$hp
 fi
 
@@ -270,7 +336,7 @@ if [ -f "/home/$luser/$hp/$hp.pid" ]; then
 else
 echo "  - start"
 nohup conpot --config /home/$luser/$hp/$hp.cfg --logfile $log_dir/$hp/$hp.log --template kamstrup_382 &
-sleep 2
+echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1
 echo $(ps -fe | grep "$hp" | head -n1 | awk '{print $2}') > /home/$luser/$hp/$hp.pid
 chown -R $luser:$luser /home/$luser/$hp/$hp.pid
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
@@ -282,7 +348,7 @@ exit 0
 
 
 
-screen -S conpot -d -m conpot --config /home/ken/conpot/conpot.cfg --logfile /opt/ken/logs/conpot/conpot.log --template kamstrup_382
+#screen -S conpot -d -m conpot --config /home/ken/conpot/conpot.cfg --logfile /opt/ken/logs/conpot/conpot.log --template kamstrup_382
 
 
 
@@ -317,5 +383,3 @@ _
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 ##################################################################################
 exit 0
-
-
