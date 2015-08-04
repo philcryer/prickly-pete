@@ -41,6 +41,11 @@ fi
 echo "  - runas..."
 run_as="sudo -u $luser"
 
+#### tail
+if [ "$1" == "tail" ]; then
+	multitail --mergeall /opt/prickly-pete/logs/conpot/conpot.log /opt/prickly-pete/logs/cowrie/cowrie.json /opt/prickly-pete/logs/glastopf/glastopf.log /opt/prickly-pete/logs/nepenthes.log /opt/prickly-pete/logs/nepenthes*log
+fi
+
 #### running
 if [ "$1" == "running" ]; then
 	echo "  - are any running..."
@@ -137,6 +142,12 @@ if [[ $UID -ne 0 ]]; then
   exit 1
 fi
 
+#### dionaea src
+if [ ! -f '/etc/apt/sources.list.d/dionaea.list' ]; then
+	cp src/dionaea.list /etc/apt/sources.list.d/
+	apt-get update
+fi
+
 #### install needed software (as listed in src/install.txt file)
 echo "  - updates..."
 if [ "$soft_update" == "1" ]; then
@@ -170,6 +181,7 @@ mkdir -p $log_dir
 #chown $luser:$luser $log_dir
 chown -R $luser:$luser /opt/prickly-pete
 
+##################################################################################
 ##################################################################################
 ##################################################################################
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
@@ -220,6 +232,8 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
+##################################################################################
+##################################################################################
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=honeypot-for-tcp-32764
 echo -n "+ $hp - "
@@ -252,6 +266,8 @@ _
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
+##################################################################################
+##################################################################################
 ##################################################################################
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=glastopf
@@ -304,6 +320,8 @@ echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
 
 ##################################################################################
+##################################################################################
+##################################################################################
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 hp=conpot 
 echo -n "+ $hp - "
@@ -341,21 +359,68 @@ echo $(ps -fe | grep "$hp" | head -n1 | awk '{print $2}') > /home/$luser/$hp/$hp
 chown -R $luser:$luser /home/$luser/$hp/$hp.pid
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 fi
+echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 
 ##################################################################################
+##################################################################################
+##################################################################################
+hp=nepenthes
+echo -n "+ $hp - "
+echo "by emulating widespread vulns this catches and stores viruses worms using these vulns"  
+if [ ! -f "/usr/sbin/nepenthes" ]; then
+	echo "  - install"
+	wget http://debian.fastweb.it/debian/pool/main/n/nepenthes/nepenthes_0.2.2-6_i386.deb
+	dpkg -i nepenthes_0.2.2-6_i386.deb
+	rm nepenthes_0.2.2-6_i386.deb
+fi
+if [ ! -d "/home/$luser/$hp" ]; then
+	echo "  - workdir"
+	mkdir -p /home/$luser/$hp
+fi
+if [ ! -f "/home/$luser/$hp/$hp.conf" ]; then
+	echo "  - config"
+	cp src/configs/$hp.conf /home/$luser/$hp
+#	echo "submitmanager
+#    {
+#        strictfiletype              "1";
+#        // where does submit-file write to? set this to the same dir
+#        filesdir                    "$log_dir/$hp/binaries/";
+#    };
+#    };" >> /home/$luser/$hp/$hp.conf
+sed -i "s/var\/log/opt\/prickly\-pete\/logs/" /home/kennyg/nepenthes/nepenthes.conf
+sed -i "s/var\/lib/opt\/prickly\-pete\/logs/" /home/kennyg/nepenthes/nepenthes.conf
+chown -R $luser:$luser /home/$luser/$hp
+fi
+
+if [ ! -d "$log_dir/$hp" ]; then
+	echo "  - logdir"
+	mkdir -p $log_dir/$hp
+	mkdir -p $log_dir/$hp/binaries
+	mkdir -p $log_dir/$hp/hexdumps
+	chown -R $luser:$luser $log_dir/$hp
+fi
+
+if [ -f "/home/$luser/$hp/$hp.pid" ]; then
+	echo "  - already running as PID `cat /home/$luser/$hp/$hp.pid` "
+else
+echo "  - start"
+nepenthes -c /home/$luser/$hp/$hp.conf -u $luser -g $luser -D > /dev/null
+#nepenthes -c /home/$luser/$hp/$hp.conf -u $luser -g $luser
+
+echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1
+echo $(ps -fe | grep "$hp" | head -n1 | awk '{print $2}') > /home/$luser/$hp/$hp.pid
+chown -R $luser:$luser /home/$luser/$hp/$hp.pid
+echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
+fi
+
 echo "${purple}++++++++++++++++++++++++++++++++++++++++${reset}"
 exit 0
 
 
 
-#screen -S conpot -d -m conpot --config /home/ken/conpot/conpot.cfg --logfile /opt/ken/logs/conpot/conpot.log --template kamstrup_382
-
-
-
-
-
-
 #### block template to add new honeypots (add name to hp, finish all ???)
+##################################################################################
+##################################################################################
 ##################################################################################
 hp=
 echo -n "+ $hp - "
@@ -383,3 +448,14 @@ _
 echo "  - running as PID `cat /home/$luser/$hp/$hp.pid` "
 ##################################################################################
 exit 0
+mkdir -p /opt/prickly-pete/logs/dionaea/bistreams
+mkdir -p /opt/prickly-pete/logs/dionaea/wwwroot
+mkdir -p /opt/prickly-pete/logs/dionaea/binaries
+mkdir -p /opt/prickly-pete/logs/dionaea/
+chown -R kennyg:kennyg /opt/prickly-pete/logs/dionaea/ /home/kennyg/dionaea
+
+chown -R nobody:nogroup /opt/prickly-pete/logs/dionaea/
+
+#dionaea -c my.conf -u kennyg -g kennyg -w /home/kennyg/dionaea -l all,-debug -L '*'
+
+dionaea -c /home/phil/devel/prickly-pete/my.conf -u nobody -g nogroup -w /opt/prickly-pete/logs/dionaea -p /var/run/dionaea.pid -l all,-debug -L '*'
