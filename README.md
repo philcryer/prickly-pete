@@ -9,6 +9,7 @@ prickly-pete currently brings up the following honeypots, automatically, with no
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
 * [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
+* [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"
 
 ## Usage
 
@@ -66,6 +67,18 @@ Connected to [00:13:EA:00:00:00]
 
 ? Command not found.
 Send 'H' for help.
+```
+
+* other, more general poking, like nmap'ing the entire box
+
+```
+# nmap localhost
+```
+
+* checking out all the open ports
+
+```
+netstat -plunt
 ```
 
 ## Silly
