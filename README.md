@@ -1,6 +1,12 @@
 # prickly-pete
 A setup script to bring up a box laden with various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it sould be useful for research and reconnaissance to test networks for infestations. 
 
+
+
+https://hub.docker.com/r/k0st/cowrie/
+https://github.com/kost/docker-cowrie
+https://hub.docker.com/r/gliderlabs/alpine/
+
 ## Honeypots
 
 prickly-pete currently brings up the following honeypots, automatically, with no configuration necessary.

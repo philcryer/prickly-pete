@@ -1,0 +1,52 @@
+nginx:
+    build: ./nginx
+    links:
+        - node1:node1
+        - node2:node2
+        - node3:node3
+    ports:
+        - "80:80"
+node1:
+    build: ./node
+    ports:
+        - "3789"
+node2:
+    build: ./node
+    ports:
+        - "3789"
+node3:
+    build: ./node
+    ports:
+        - "3789"
+
+
+slave:
+  # image: mysql:5.7
+  build: .
+  dockerfile: Dockerfile.slave
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=test
+    - MYSQL_USER=ckeyer
+    - MYSQL_PASSWORD=wangcj
+  ports:
+    - "3307:3306"
+  volumes:
+    - ./slave.cnf:/etc/mysql/my.cnf
+    - /data/mysql/slave:/var/lib/mysql
+  links:
+    - master:master
+master:
+  # image: mysql:5.7
+  build: .
+  dockerfile: Dockerfile.master
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=test
+    - MYSQL_USER=ckeyer
+    - MYSQL_PASSWORD=wangcj
+  ports:
+    - "3306:3306"
+  volumes:
+    - ./master.cnf:/etc/mysql/my.cnf
+    - /data/mysql/master:/var/lib/mysql
