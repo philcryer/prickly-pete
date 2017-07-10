@@ -12,12 +12,12 @@ set -euo pipefail
 IFS=$'\n\t'
 
 #/ Usage: prickly-pete [build] [start] [stop] [status]
-#/	Options:
-#/   	    build: build all containers
-#/   	    start: build (if needed) and start all containers
-#/   	    stop: stop and remove all containers
-#/   	    status: show the status of all conatainers
-#/   	    help: Display this help message
+#/     Options:
+#/         build: build all containers
+#/         start: build (if needed) and start all containers
+#/         stop: stop and remove all containers
+#/         status: show the status of all conatainers
+#/         help: display this help message
 
 usage() { grep '^#/' "$0" | cut -c4- ; exit 0 ; }
 expr "$*" : ".*--help" > /dev/null && usage

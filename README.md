@@ -8,6 +8,8 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 
 * [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo by Upi Tamminen (desaster). PP uses the DockerHub image **k0st/cowrie** [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/) as the baseimage
 
+* [dionaea]
+https://github.com/DinoTools/dionaea-docker/archive/master.zip
 ---
 
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
