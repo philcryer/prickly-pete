@@ -6,7 +6,7 @@ A setup to bring up various honeypots running as many exposed services as possib
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
 
-* [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster). Docker container runs *k0st/cowrie* [dockerhub](https://hub.docker.com/r/k0st/cowrie/) [github](https://github.com/kost/docker-cowrie)
+* [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster). We are using the DockerHub image *k0st/cowrie* [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/)
 
 ---
 
