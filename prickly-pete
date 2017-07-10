@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# prickly-pete
+# 	a simple wrapper script to control the containers that run via this project:
+#	https://github.com/philcryer/prickly-pete
+# 
+# Thanks
+# 	this script developed from a well thoughtout template you can find here
+# 	https://dev.to/thiht/shell-scripts-matter (thanks http://twitter.com/Thiht)
+
+set -euo pipefail
+IFS=$'\n\t'
+
+#/ Usage: prickly-pete [build] [start] [stop] [status]
+#/	Options:
+#/   	    build: build all containers
+#/   	    start: build (if needed) and start all containers
+#/   	    stop: stop and remove all containers
+#/   	    status: show the status of all conatainers
+#/   	    help: Display this help message
+
+usage() { grep '^#/' "$0" | cut -c4- ; exit 0 ; }
+expr "$*" : ".*--help" > /dev/null && usage
+expr "$*" : ".*help" > /dev/null && usage
+
+if [[ $# -eq 0 ]] ; then
+	usage
+fi
+
+if [[ $# -gt 1 ]] ; then
+	usage
+fi
+
+readonly LOG_FILE="/tmp/$(basename "$0").log"
+info()    { echo "[INFO]    $@" | tee -a "$LOG_FILE" >&2 ; }
+warning() { echo "[WARNING] $@" | tee -a "$LOG_FILE" >&2 ; }
+error()   { echo "[ERROR]   $@" | tee -a "$LOG_FILE" >&2 ; }
+fatal()   { echo "[FATAL]   $@" | tee -a "$LOG_FILE" >&2 ; exit 1 ; }
+
+cleanup() {
+    # Remove temporary files
+    # Restart services
+    echo "[INFO]    stopping" >> "$LOG_FILE"
+}
+
+if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
+    trap cleanup EXIT
+    
+case "$1" in
+	build) cd src; docker-compose build ;;
+	start) cd src; docker-compose up -d ;;
+	stop) cd src; docker-compose down ;;
+	status) cd src; docker-compose ps  ;;
+
+esac
+
+fi
