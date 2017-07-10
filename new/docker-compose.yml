@@ -1,4 +1,0 @@
-web:
-  build: docker-cowrie
-  ports:
-   - "5000:5000"

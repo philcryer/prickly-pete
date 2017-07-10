@@ -1,5 +1,0 @@
-#### username (define user name you want to use)
-luser=kennyg
-
-#### update software (only needed on first run, unless you've added to install.txt)
-soft_update=1

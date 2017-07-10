@@ -1,0 +1,4 @@
+cowrie:
+  image: k0st/cowrie
+  ports:
+   - "5000:2222"

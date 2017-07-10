@@ -1,17 +1,15 @@
 # prickly-pete
-A setup script to bring up a box laden with various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it sould be useful for research and reconnaissance to test networks for infestations. 
-
-
-
-https://hub.docker.com/r/k0st/cowrie/
-https://github.com/kost/docker-cowrie
-https://hub.docker.com/r/gliderlabs/alpine/
+A setup to bring up various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it sould be useful for research and reconnaissance to test networks for infestations. Updated in 2017 to use [Docker](https://www.docker.com/) and [Docker-Compose](https://docs.docker.com/compose/) to containerize the honeypots.
 
 ## Honeypots
 
-prickly-pete currently brings up the following honeypots, automatically, with no configuration necessary.
+prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
-* [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster).
+
+* [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster). Docker container runs *k0st/cowrie* [dockerhub](https://hub.docker.com/r/k0st/cowrie/) [github](https://github.com/kost/docker-cowrie)
+
+---
+
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
 * [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
@@ -19,16 +17,18 @@ prickly-pete currently brings up the following honeypots, automatically, with no
 
 ## Usage
 
+* Install [Docker](https://docs.docker.com/engine/installation/)
+* Install [Docker-Compose](https://docs.docker.com/compose/install/)
+* Checkout `prickly-pete` and change into the directory
+
 ```
 git clone https://github.com/philcryer/prickly-pete.git
 cd prickly-pete
-cp config.cfg.example config.cfg
 ```
-
-And you're ready to go, feel free to look things over, edit `config.cfg` if you want, then kick it off:
+* Run `prickly-pete`
 
 ```
-./prickly-pete.sh
+docker-compose up
 ```
 
 ## Testing
@@ -86,6 +86,12 @@ Send 'H' for help.
 ```
 netstat -plunt
 ```
+
+## Thanks
+
+
+https://hub.docker.com/r/gliderlabs/alpine/
+
 
 ## Silly
 
