@@ -6,7 +6,7 @@ A setup to bring up various honeypots running as many exposed services as possib
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
 
-* [cowrie](https://github.com/micheloosterhof/cowrie) - a medium interaction SSH honeypot designed to log brute force attacks and, most importantly, the entire shell interaction performed by the attacker. Based on Kippo by Upi Tamminen (desaster). We are using the DockerHub image *k0st/cowrie* [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/)
+* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo by Upi Tamminen (desaster). PP uses the DockerHub image **k0st/cowrie** [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/) as the baseimage
 
 ---
 
@@ -33,15 +33,15 @@ docker-compose up
 
 ## Testing
 
-### See what you can see
+Once up, see what you can see
 
-* cowrie - `ssh` to the port, logging in as root (yes, the password can be blank)
+* `SSH` - connect to the host over ssh, logging in as root using any (or no) password
 
 ```
-ssh localhost -p 22 -l root
+ssh localhost -p 2222 -l root
 ```
 
-* glastopf - use `curl` against the port to see what it returns 
+* web - `curl` against the port to see what it returns 
 
 ```
 curl localhost
@@ -89,8 +89,12 @@ netstat -plunt
 
 ## Thanks
 
+Software and existing projects I used to create this project
 
-https://hub.docker.com/r/gliderlabs/alpine/
+* [Docker](https://docker.com/)
+* [Docker-Compose](https://docker.com/compose)
+* [Docker Hub](https://hub.docker.com/)
+* [Alpine Linux](https://alpinelinux.org/)
 
 
 ## Silly
@@ -121,26 +125,4 @@ it up a notch!"
 
 ## License
 
-The MIT License (MIT)
-
-Copyright (c) 2015 philcryer
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-### Thanks
+[MIT License](https://tldrlegal.com/license/mit-license)
