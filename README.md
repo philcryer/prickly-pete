@@ -1,21 +1,19 @@
 # prickly-pete
 A setup to bring up various honeypots running as many exposed services as possible. While originally built to run on a laptop during a famous infosec conference to see how many pings and pokes we could attract, it sould be useful for research and reconnaissance to test networks for infestations. Updated in 2017 to use [Docker](https://www.docker.com/) and [Docker-Compose](https://docs.docker.com/compose/) to containerize the honeypots.
 
+### Security?
+While this project was culled from others who likely have security in mind, I wouldn't assume this would be idea to run in a production environment without a complete security audit... but then again, YOLO!
+
 ## Honeypots
 
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
 
-* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo by Upi Tamminen (desaster). PP uses the DockerHub image **k0st/cowrie** [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/) as the baseimage
-
+* [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
+* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo, using the DockerHub image **k0st/cowrie** [[dockerhub](https://hub.docker.com/r/k0st/cowrie/)] [[github](https://github.com/kost/docker-cowrie)], running [Alpine Linux](https://hub.docker.com/r/gliderlabs/alpine/) as the baseimage
 * [dionaea]
 https://github.com/DinoTools/dionaea-docker/archive/master.zip
----
 
-* [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
-* [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
-* [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
-* [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"
 
 ## Usage
 
@@ -42,7 +40,7 @@ git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 * Logging
 
 ```
-tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea*
+tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log
 ```
 	
 * Stopping
@@ -82,8 +80,6 @@ PORT     STATE SERVICE
 
 * `ssh`
 
- - connect to the host over ssh, logging in as root using any (or no) password
-
 ```
 ssh localhost -p 2222 -l root
 ```
@@ -94,22 +90,6 @@ ssh localhost -p 2222 -l root
 curl localhost:443
 ```
 
-or point a browser to [http://localhost/](http://localhost/)
-
-* honeypot-for-tcp-32764 - run `nmap` against the port to see that it's open (need to figure out what else it can tell us)
-
-```
-# nmap -p 32764 localhost
-
-Starting Nmap 6.47 ( http://nmap.org ) at 2015-07-31 14:33 GMT
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.000034s latency).
-Other addresses for localhost (not scanned): 127.0.0.1
-PORT      STATE SERVICE
-32764/tcp open  unknown
-
-Nmap done: 1 IP address (1 host up) scanned in 1.03 seconds
-```
 
 * contpot - ssh to the port (note that the MAC address can be changed in the config for further confusion)
 
@@ -122,37 +102,34 @@ Connected to [00:13:EA:00:00:00]
 Send 'H' for help.
 ```
 
-* other, more general poking, like nmap'ing the entire box
+* netstat
 
 ```
-# nmap localhost
+netstat -plunt | grep docker
 ```
 
-* checking out all the open ports
+## License
 
-```
-netstat -plunt
-```
+[MIT License](https://tldrlegal.com/license/mit-license)
 
 ## Acknowledgements
 
-Software and existing projects I used to create this project
+Software, existing projects, and ideas that I used to create this project
 
-* [Docker](https://docker.com/)
-* [Docker-Compose](https://docker.com/compose)
-* [Docker Hub](https://hub.docker.com/)
-* [Alpine Linux](https://alpinelinux.org/)
+* [Docker](https://docker.com/), [Docker-Compose](https://docker.com/compose), and [Docker Hub](https://hub.docker.com/) for prebuilt images
+* [Alpine Linux](https://alpinelinux.org/), a small Linux base image for Docker images
+* [DinoTools/dionaea](https://github.com/DinoTools/dionaea), home of the dionaea honeypot
+* [andrewmichaelsmith/manuka](https://github.com/andrewmichaelsmith/manuka), Docker based honeypot (Dionaea & Kippo)
+* [mushorg/conpot](https://github.com/mushorg/conpot), a ICS/SCADA honeypot
+
+Older bits that are now legacy, but got us to where we are not
+
+* [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
+* [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
+* [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"
 
 
-https://github.com/DinoTools/dionaea
-
-https://github.com/andrewmichaelsmith/manuka
-
-https://github.com/mushorg/conpot
-ICS/SCADA honeypot
-
-
-## Silly
+## Prickly-Pete?
 
 __George,__ _driving in the car with the Rosses:_ "And that leads into the master bedroom."
 
@@ -177,7 +154,3 @@ __George,__ _chuckling to himself:_ "Housewarming gift."
 
 __George,__ _swerving the car to go to the antique stand:_ "All right, we're taking
 it up a notch!"
-
-## License
-
-[MIT License](https://tldrlegal.com/license/mit-license)
