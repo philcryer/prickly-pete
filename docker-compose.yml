@@ -1,0 +1,40 @@
+conpot:
+  image: honeynet/conpot
+  volumes:
+       - ./var/conpot:/var/log/conpot
+  ports:
+       #- "80:80"       # SCADA UI, http
+       - "8888:80"      # SCADA UI, http
+       - "102:102"      # S7Comm
+       - "502:502"      # Modbus
+       #- "161:161/udp" # SNMP
+       - "162:161/udp"  # SNMP
+       - "47808:47808"  # Bacnet
+       - "623:623"      # IPMI
+
+cowrie:
+  image: k0st/cowrie
+  volumes:
+   - ./var/cowrie/log:/home/cowrie/cowrie/log
+  ports:
+   #- "22:2222"         # OpenSSH, ssh
+   - "2222:2222"        # OpenSSH, ssh
+
+dionaea:
+    image: andrewmichaelsmith/dionaea
+    volumes:
+       - ./var/dionaea:/vol/dionaea
+    ports:
+       - "21:21"        # ftp
+       - "42:42"
+       #- "80:80"       # http
+       - "8080:80"      # http
+       - "135:135"
+       - "443:443"      # https
+       - "445:445"
+       - "1433:1433"
+       - "3306:3306"
+       - "5060:5060"
+       - "5061:5061"
+       - "69:69/udp"
+       - "5060:5060/udp"

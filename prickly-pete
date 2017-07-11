@@ -19,10 +19,10 @@ IFS=$'\n\t'
 #/         status: show the status of all conatainers
 #/         help: display this help message
 
+#### define usage dialogue, and call it if we don't have the right num of arguments
 usage() { grep '^#/' "$0" | cut -c4- ; exit 0 ; }
 expr "$*" : ".*--help" > /dev/null && usage
 expr "$*" : ".*help" > /dev/null && usage
-
 if [[ $# -eq 0 ]] ; then
 	usage
 fi
@@ -31,27 +31,56 @@ if [[ $# -gt 1 ]] ; then
 	usage
 fi
 
-readonly LOG_FILE="/tmp/$(basename "$0").log"
-info()    { echo "[INFO]    $@" | tee -a "$LOG_FILE" >&2 ; }
-warning() { echo "[WARNING] $@" | tee -a "$LOG_FILE" >&2 ; }
-error()   { echo "[ERROR]   $@" | tee -a "$LOG_FILE" >&2 ; }
-fatal()   { echo "[FATAL]   $@" | tee -a "$LOG_FILE" >&2 ; exit 1 ; }
+#### check for required software
+for cli in docker docker-compose; do
+	if ! type "$cli" > /dev/null 2>&1; then
+       		echo "FAIL - $cli is not installed and in the PATH. Aborting."
+		exit 1
+        fi
+done
 
+#### create log directory for script and app logs
+if [ ! -d 'var' ]; then
+	mkdir -p var/dionaea/{wwwroot,binaries,log,bitstreams}
+	mkdir -p var/conpot
+	mkdir -p var/cowrie/log
+	# obviously a bad hack here, let's figure this out later
+	chmod -R 777 var/cowrie/log
+fi
+
+#### create log files and rules
+readonly log_file="var/$(basename "$0").log"
+info()    { echo "[INFO]    $@" | tee -a "$log_file" >&2 ; }
+warning() { echo "[WARNING] $@" | tee -a "$log_file" >&2 ; }
+error()   { echo "[ERROR]   $@" | tee -a "$log_file" >&2 ; }
+fatal()   { echo "[FATAL]   $@" | tee -a "$log_file" >&2 ; exit 1 ; }
+
+#### cleanup routinue to be run after script exits
 cleanup() {
-    # Remove temporary files
-    # Restart services
-    echo "[INFO]    stopping" >> "$LOG_FILE"
+    # Remove temporary files or Restart services
+    #echo "[INFO]    stopping" >> "$log_file"
+    printf "%s %s\n" "`date -u`" "prickly-pete: cleanup" >> $log_file
 }
 
+#### the script aktion
 if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
     trap cleanup EXIT
     
-case "$1" in
-	build) cd src; docker-compose build ;;
-	start) cd src; docker-compose up -d ;;
-	stop) cd src; docker-compose down ;;
-	status) cd src; docker-compose ps  ;;
+    case "$1" in
+        build) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: building containers" >> $log_file; 
+		docker-compose build ;;
 
-esac
+	start) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: starting containers" >> $log_file; 
+		docker-compose up -d ;;
 
+	stop) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: stopping containers" >> $log_file; 
+		docker-compose down;
+		printf "%s %s\n" "`date -u`" "prickly-pete: exiting" >> $log_file;
+		exit 0;;
+
+	status) docker-compose ps  ;;
+    esac
 fi

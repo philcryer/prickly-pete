@@ -24,29 +24,74 @@ https://github.com/DinoTools/dionaea-docker/archive/master.zip
 * Checkout `prickly-pete` and change into the directory
 
 ```
-git clone https://github.com/philcryer/prickly-pete.git
-cd prickly-pete
+git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 ```
-* Run `prickly-pete`
+
+* Runing
 
 ```
-docker-compose up
+./prickly-pete start
+```
+
+* Status
+
+```
+./prickly-pete status
+```
+
+* Logging
+
+```
+tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea*
+```
+	
+* Stopping
+
+```
+./prickly-pete stop
 ```
 
 ## Testing
 
-Once up, see what you can see
+Once up, see what you can see using various system tools
 
-* `SSH` - connect to the host over ssh, logging in as root using any (or no) password
+* `nmap`
+
+```
+$ nmap localhost
+
+Starting Nmap 6.40 ( http://nmap.org ) at 2017-07-11 13:10 CDT
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.0016s latency).
+Other addresses for localhost (not scanned): 127.0.0.1
+Not shown: 983 closed ports
+PORT     STATE SERVICE
+21/tcp   open  ftp
+22/tcp   open  ssh
+42/tcp   open  nameserver
+135/tcp  open  msrpc
+443/tcp  open  https
+445/tcp  open  microsoft-ds
+1433/tcp open  ms-sql-s
+2222/tcp open  EtherNet/IP-1
+3306/tcp open  mysql
+5060/tcp open  sip
+5061/tcp open  sip-tls
+8080/tcp open  http-proxy
+```
+
+* `ssh`
+
+ - connect to the host over ssh, logging in as root using any (or no) password
 
 ```
 ssh localhost -p 2222 -l root
 ```
 
-* web - `curl` against the port to see what it returns 
+* `curl`
 
 ```
-curl localhost
+curl localhost:443
 ```
 
 or point a browser to [http://localhost/](http://localhost/)
@@ -89,7 +134,7 @@ Send 'H' for help.
 netstat -plunt
 ```
 
-## Thanks
+## Acknowledgements
 
 Software and existing projects I used to create this project
 
@@ -97,6 +142,14 @@ Software and existing projects I used to create this project
 * [Docker-Compose](https://docker.com/compose)
 * [Docker Hub](https://hub.docker.com/)
 * [Alpine Linux](https://alpinelinux.org/)
+
+
+https://github.com/DinoTools/dionaea
+
+https://github.com/andrewmichaelsmith/manuka
+
+https://github.com/mushorg/conpot
+ICS/SCADA honeypot
 
 
 ## Silly
