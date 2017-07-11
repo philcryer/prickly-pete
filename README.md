@@ -5,13 +5,15 @@ A script using Docker (and Docker-Compose) to quickly bring up some honeypots ex
 While this project is designed to help identify security issues, and was culled from others who likely have security in mind, I would NOT recommend running this in production environment without a complete security audit... but then again, YOLO!
 
 ## Honeypots
-
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
-
 * [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
-* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo, using the DockerHub image [k0st/cowrie](https://hub.docker.com/r/k0st/cowrie/)]
+* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo, using the DockerHub image [k0st/cowrie](https://hub.docker.com/r/k0st/cowrie/)
 * [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot,  using the DockerHub image [andrewmichaelsmith/dionaea](https://hub.docker.com/r/andrewmichaelsmith/dionaea/)
+
+## Requirements
+
+Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Docker-Compose` installed and running. Linux or Mac OSX are tested and running. While I haven't run this on Windows *"it should work"* since it all runs in Docker with no modifications. Give it a try and let me know if it works for you, pull requests welcome!
 
 ## Usage
 
@@ -59,7 +61,13 @@ It just means that the port (in this case 161) is already taken, and something, 
 
 ## Testing
 
-Once up, see what you can see using various system tools
+Once up, see what you can see using various system tools, which should be installed on most Unix-like systems.
+
+* `ssh`
+
+```
+ssh localhost -p 2222 -l root
+```
 
 * `nmap`
 
@@ -86,28 +94,10 @@ PORT     STATE SERVICE
 8080/tcp open  http-proxy
 ```
 
-* `ssh`
-
-```
-ssh localhost -p 2222 -l root
-```
-
 * `curl`
 
 ```
 curl localhost:443
-```
-
-
-* contpot - ssh to the port (note that the MAC address can be changed in the config for further confusion)
-
-```
-$ curl localhost:50100
-Welcome...
-Connected to [00:13:EA:00:00:00]
-
-? Command not found.
-Send 'H' for help.
 ```
 
 * netstat
@@ -128,15 +118,14 @@ Software, existing projects, and ideas that I used to create this project
 * [Alpine Linux](https://alpinelinux.org/), a small Linux base image for Docker images that you should use if you're building your own
 * [andrewmichaelsmith/manuka](https://github.com/andrewmichaelsmith/manuka), Docker based honeypot (Dionaea & Kippo)
 * [mushorg/conpot](https://github.com/mushorg/conpot), a ICS/SCADA honeypot 
-* [dionaea-docker](https://github.com/DinoTools/dionaea-docker)
-* [github](https://github.com/kost/docker-cowrie)
+* [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker)
+* [kost/docker-cowrie](https://github.com/kost/docker-cowrie)
 
 Older bits that are now legacy, but got us to where we are not
 
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
 * [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"
-
 
 ## Prickly-Pete?
 
