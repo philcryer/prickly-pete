@@ -63,13 +63,13 @@ It just means that the port (in this case 161) is already taken, and something, 
 
 Once up, see what you can see using various system tools, which should be installed on most Unix-like systems.
 
-* `ssh`
+* ssh
 
 ```
 ssh localhost -p 2222 -l root
 ```
 
-* `nmap`
+* nmap
 
 ```
 $ nmap localhost
@@ -94,7 +94,7 @@ PORT     STATE SERVICE
 8080/tcp open  http-proxy
 ```
 
-* `curl`
+* curl
 
 ```
 curl localhost:443
