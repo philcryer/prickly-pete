@@ -1,3 +1,5 @@
 config.cfg
 .updated
 nohup.out
+log
+pp
