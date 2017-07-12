@@ -124,7 +124,7 @@ Software, existing projects, and ideas that I used to create this project
 * [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker)
 * [kost/docker-cowrie](https://github.com/kost/docker-cowrie)
 
-Older bits that are now legacy, but got us to where we are not
+Older bits that are now legacy, but got us to where we are now
 
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
