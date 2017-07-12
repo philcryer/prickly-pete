@@ -25,7 +25,7 @@ Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Dock
 git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 ```
 
-* Runing
+* Start
 
 ```
 ./prickly-pete start
@@ -37,27 +37,33 @@ git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 ./prickly-pete status
 ```
 
-* Logging
+* Log
 
 ```
-tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log
+./prickly-pete log
 ```
-	
+
 * Stopping
 
 ```
 ./prickly-pete stop
 ```
 
-### Errors
+### Issues
 
-If you get any errors when you're first running prickly-pete, they'll likely look something like this:
+* If you get any errors when you're first running prickly-pete, they'll likely look something like this:
 
 ```
 ERROR: for pricklypete_conpot_1  Cannot start service conpot: driver failed programming external connectivity on endpoint pricklypete_conpot_1 (cc7d3b484bcf24a08b63792c5188deddb19fd9809eaf35df15fa92ac024e4a99): Error starting userland proxy: listen udp 0.0.0.0:161: bind: address already in use
 ```
 
 Errors like this means that the port (in this case 161) is already taken, and something, in this case SNMP, is listening on the port. To fix this just open `docker-compose.yml` in a text editor, comment out the offending port, and try to use one of the alternative ones I have listed by uncommenting them. I have options for 22, 80, 161 since those tend to be the ones that are running, but for more fun, turn off those services on your localhost and let prickly-pete use them for the time being!
+
+* Another issue could be that you're running a firewall blocking access to ports, you'll want to stop or turn off any firewalls on the host that you're running prickly-pete on so that everything gets through! Another idea if you're inside a network (like at home) set your router to forward all traffic to a [DMZ](https://en.wikipedia.org/wiki/DMZ_(computing), and then set that DMZ to be the IP of the host running prickly-pete, this is an easy way to begin to understand all the *noise* that is contantly being broadcast on the internet, and why an active defense is neccessary.
+
+* If you're having issues outside of these basic things, feel free to open an [issue](https://github.com/philcryer/prickly-pete/issues), or ping me on Twitter where I'm [@fak3r](https://twitter.com/fak3r).
+
+* Of course if you've fixed something yourself, or have an improvement you'd like to suggest, [pull requests](https://github.com/philcryer/prickly-pete/pulls) are always welcome!
 
 ## Testing
 
@@ -106,12 +112,12 @@ curl localhost:443
 * netstat
 
 ```
-netstat -plunt | grep docker
+sudo netstat -plunt | grep docker
 ```
 
 ## License
 
-[MIT License](https://tldrlegal.com/license/mit-license)
+* prickly-pete is open source, via the permissive [MIT License](https://github.com/philcryer/prickly-pete/blob/master/LICENSE)
 
 ## Acknowledgements
 
@@ -121,8 +127,8 @@ Software, existing projects, and ideas that I used to create this project
 * [Alpine Linux](https://alpinelinux.org/), a small Linux base image for Docker images that you should use if you're building your own
 * [andrewmichaelsmith/manuka](https://github.com/andrewmichaelsmith/manuka), Docker based honeypot (Dionaea & Kippo)
 * [mushorg/conpot](https://github.com/mushorg/conpot), a ICS/SCADA honeypot 
-* [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker)
-* [kost/docker-cowrie](https://github.com/kost/docker-cowrie)
+* [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker), Dionaea running in Docker
+* [kost/docker-cowrie](https://github.com/kost/docker-cowrie), a version of Cowrie running in Docker
 
 Older bits that are now legacy, but got us to where we are now
 

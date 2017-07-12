@@ -13,10 +13,10 @@ IFS=$'\n\t'
 
 #/ Usage: prickly-pete [build] [start] [stop] [status]
 #/     Options:
-#/         build: build all containers
-#/         start: build (if needed) and start all containers
+#/         start: build and start all containers
+#/         log: show live logs from all containers
+#/         status: show the running status of all conatainers
 #/         stop: stop and remove all containers
-#/         status: show the status of all conatainers
 #/         help: display this help message
 
 #### define usage dialogue, and call it if we don't have the right num of arguments
@@ -70,9 +70,13 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
                 printf "%s %s\n" "`date -u`" "prickly-pete: building containers" >> $log_file; 
 		docker-compose build ;;
 
+	log)    tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log;;
+
 	start) 
                 printf "%s %s\n" "`date -u`" "prickly-pete: starting containers" >> $log_file; 
 		docker-compose up -d ;;
+
+	status) docker-compose ps  ;;
 
 	stop) 
                 printf "%s %s\n" "`date -u`" "prickly-pete: stopping containers" >> $log_file; 
@@ -80,6 +84,5 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 		printf "%s %s\n" "`date -u`" "prickly-pete: exiting" >> $log_file;
 		exit 0;;
 
-	status) docker-compose ps  ;;
     esac
 fi
