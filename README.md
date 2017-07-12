@@ -1,5 +1,5 @@
 # prickly-pete
-A script using Docker (and Docker-Compose) to quickly bring up some honeypots exposing 19 services. For research, reconnaissance and fun. While originally built to run on a laptop during DEF CON conference to see how many pings and pokes we could attract, it should be useful for research, and reconnaissance to test networks for infestations. Complete rewritten in 2017 to use [Docker](https://www.docker.com/) and [Docker-Compose](https://docs.docker.com/compose/) to containerize all honeypot services, greatly speeding up deployment time while reducing system requirements. 
+A script using [Docker](https://www.docker.com) to quickly bring up some honeypots exposing 16 services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
 
 ### Security?
 While this project is designed to help identify security issues, and was culled from others who likely have security in mind, I would NOT recommend running this in production environment without a complete security audit... but then again, YOLO!
@@ -13,7 +13,7 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 
 ## Requirements
 
-Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Docker-Compose` installed and running. Linux or Mac OSX are tested and running. While I haven't run this on Windows *"it should work"* since it all runs in Docker with no modifications. Give it a try and let me know if it works for you, pull requests welcome!
+Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Docker-Compose` installed and running. I've developed this in Linux, and have tested it on Debian/Ubutnu and RHEL, and I'd expect it to work pefectly under Mac OSX too. Now, while I haven't run this on Windows *"it should work"* since it all runs in Docker with no modifications. Give it a try and let me know if it works for you, pull requests welcome!
 
 ## Usage
 
@@ -57,7 +57,7 @@ If you get any errors when you're first running prickly-pete, they'll likely loo
 ERROR: for pricklypete_conpot_1  Cannot start service conpot: driver failed programming external connectivity on endpoint pricklypete_conpot_1 (cc7d3b484bcf24a08b63792c5188deddb19fd9809eaf35df15fa92ac024e4a99): Error starting userland proxy: listen udp 0.0.0.0:161: bind: address already in use
 ```
 
-It just means that the port (in this case 161) is already taken, and something, in this case SNMPD, is listening on the port. To fix, just open `docker-compose.yml` in a text editor, comment out the offending line, and try to use one of the alternative ones I have listed by uncommenting them. I have options for 22, 80, 161 since those tend to be the ones that are running, but for more fun, turn off those services on your localhost and let prickly-pete use them for the time being!
+Errors like this means that the port (in this case 161) is already taken, and something, in this case SNMP, is listening on the port. To fix this just open `docker-compose.yml` in a text editor, comment out the offending port, and try to use one of the alternative ones I have listed by uncommenting them. I have options for 22, 80, 161 since those tend to be the ones that are running, but for more fun, turn off those services on your localhost and let prickly-pete use them for the time being!
 
 ## Testing
 
