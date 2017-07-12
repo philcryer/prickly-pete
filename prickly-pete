@@ -26,7 +26,6 @@ expr "$*" : ".*help" > /dev/null && usage
 if [[ $# -eq 0 ]] ; then
 	usage
 fi
-
 if [[ $# -gt 1 ]] ; then
 	usage
 fi
