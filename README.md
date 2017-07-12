@@ -13,7 +13,7 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 
 ## Requirements
 
-Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Docker-Compose` installed and running. I've developed this in Linux, and have tested it on Debian/Ubutnu and RHEL, and I'd expect it to work pefectly under Mac OSX too. Now, while I haven't run this on Windows *"it should work"* since it all runs in Docker with no modifications. Give it a try and let me know if it works for you, pull requests welcome!
+Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Docker-Compose` installed and running. I've developed this in Linux, so it's been fully tested in Debian, Ubuntu, RHEL, and CentOS. I'd expect it to work pefectly under Mac OSX too, and while I haven't tried in Windows *"it should work"* since it all runs in Docker with no modifications. Give it a try and let me know if it works for you, pull requests welcome!
 
 ## Usage
 
