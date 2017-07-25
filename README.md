@@ -49,6 +49,10 @@ git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 ./prickly-pete stop
 ```
 
+### Output
+
+All logs, and any downloaded malware or other bits, can be found in script created `var` directory, which will persist after the process ends. Note that restarting the script will use the same directories and will include all new logs/downloads. 
+
 ### Issues
 
 * If you get any errors when you're first running prickly-pete, they'll likely look something like this:
