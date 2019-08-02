@@ -70,7 +70,10 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
                 printf "%s %s\n" "`date -u`" "prickly-pete: building containers" >> $log_file; 
 		docker-compose build ;;
 
-	log)    tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log;;
+	log)        if [[ ! -f 'var/cowrie/log/cowrie.log' ]]; then    
+            echo "[ERROR] log files not found, are services running?"; exit 1
+        fi
+        tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log;;
 
 	start) 
                 printf "%s %s\n" "`date -u`" "prickly-pete: starting containers" >> $log_file; 
