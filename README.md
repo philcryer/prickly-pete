@@ -11,8 +11,9 @@ While this project is designed to help identify security issues, and was culled 
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
 * [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
-* [cowrie](https://github.com/micheloosterhof/cowrie) - SSH/Telnet honeypot, originally based on Kippo, using the DockerHub image [k0st/cowrie](https://hub.docker.com/r/k0st/cowrie/)
-* [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot,  using the DockerHub image [andrewmichaelsmith/dionaea](https://hub.docker.com/r/andrewmichaelsmith/dionaea/)
+* [cowrie](https://github.com/cowrie/docker-cowrie) - an SSH/Telnet honeypot, originally based on Kippo, using the official DockerHub image [cowrie/cowrie](https://hub.docker.com/r/cowrie/cowrie)
+* [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot, using the official DockerHub image [dinotools/dionaea]https://hub.docker.com/r/dinotools/dionaea)
+* [gate](https://hub.docker.com/r/anfa/gate), a basic nodejs webserver running on :3000 with a fake index.html copied from nodejs.org (you can create your own and put it in src/gate/ to have it use that instead)
 
 ## Requirements
 
@@ -87,31 +88,21 @@ ssh localhost -p 2222 -l root
 ```
 $ sudo nmap -p- localhost
 
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 17:17 CDT
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 17:51 CDT
 Nmap scan report for localhost (127.0.0.1)
-Host is up (0.00017s latency).
+Host is up (0.00028s latency).
 Other addresses for localhost (not scanned): ::1
-Not shown: 65508 closed ports
+Not shown: 65518 closed ports
 PORT      STATE    SERVICE
 21/tcp    open     ftp
-22/tcp    open     ssh
-42/tcp    open     nameserver
-80/tcp    open     http
 102/tcp   open     iso-tsap
-135/tcp   open     msrpc
-443/tcp   open     https
-445/tcp   open     microsoft-ds
 502/tcp   open     mbap
 623/tcp   open     oob-ws-http
-1433/tcp  open     ms-sql-s
-1723/tcp  open     pptp
-1883/tcp  open     mqtt
-3306/tcp  open     mysql
-5060/tcp  open     sip
-5061/tcp  open     sip-tls
+2222/tcp  open     EtherNetIP-1
+3000/tcp  open     ppp
 8080/tcp  open     http-proxy
 8888/tcp  open     sun-answerbook
-11211/tcp open     memcache
+44818/tcp open     EtherNetIP-2
 47808/tcp open     bacnet
 49288/tcp open     unknown
 51413/tcp open     unknown
@@ -119,7 +110,9 @@ PORT      STATE    SERVICE
 57621/tcp open     unknown
 57622/tcp open     unknown
 61500/tcp filtered unknown
-64131/tcp filtered unknown
+63334/tcp filtered unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 5.94 seconds
 ```
 
 * curl

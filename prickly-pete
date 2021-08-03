@@ -40,14 +40,11 @@ done
 
 #### create log directory for script and app logs
 if [ ! -d 'var' ]; then
-	mkdir -p var/dionaea/{wwwroot,binaries,log,bitstreams}
-	touch var/dionaea/log
+	mkdir -p var/dionaea/{log,etc,var,var/lib,wwwroot,binaries,log,bitstreams}
 	mkdir -p var/conpot
 	touch var/conpot/conpot.log
-	#mkdir -p var/cowrie/log
-	#touch var/cowrie/log/cowrie.log
-	# obviously a bad hack here, let's figure this out later
-	#chmod -R 777 var/cowrie/log
+	mkdir -p var/gate/public
+        cp src/gate/index.html var/gate/public/index.html 
 fi
 
 #### create log files and rules

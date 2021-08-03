@@ -5,19 +5,20 @@ services:
         - ./var/cowrie/log:/cowrie/cowrie-git/var/log/cowrie
         - ./src/configs/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg
     ports:
-        - "22:2222"     	# ssh
-        #- "2222:2222"        	# ssh
+        #- "22:2222"     	# ssh
+        - "2222:2222"        	# ssh
 
   dionaea:
     image: dinotools/dionaea
     restart: always
     volumes:
        - ./var/dionaea/log:/opt/dionaea/var/log/dionaea
-
+       - ./var/dionaea/etc:/opt/dionaea/etc/dionaea
+       - ./var/dionaea/var:/opt/dionaea/var/libdionaea
     ports:
-       - "21:21"      		# ftp
+       #- "21:21"      		# ftp
        - "42:42"        	# wins
-       - "69:69/udp"    	# tftp
+       #- "69:69/udp"    	# tftp
        - "80:80"       		# http
        #- "8080:80"      	# http
        - "135:135"      	# loc-srv
@@ -38,13 +39,24 @@ services:
     volumes:
        - ./var/conpot:/var/log/conpot
     ports:
+       - "21:2121" 
+       - "69:6969/udp"
        #- "80:80"       	# SCADA UI, http
-       - "8080:80"      	# SCADA UI, http
-       - "8888:80"      	# SCADA UI, http
        - "102:102"      	# S7Comm
-       - "502:502"      	# Modbus
        - "161:161/udp"  	# SNMP
        - "162:161/udp"  	# SNMP
-       - "47808:47808"  	# Bacnet
+       - "502:502"      	# Modbus
        - "623:623"      	# IPMI
+       - "8080:80"      	# SCADA UI, http
+       - "8888:80"      	# SCADA UI, http
+       - "47808:47808"  	# Bacnet
+       - "44818:44818"
 
+  gate:
+    image: anfa/gate
+    volumes:
+       - ./var/gate/public:/opt/nodejs/public
+    #name:
+    #   - sriv04.testcom.com
+    ports:
+       - "3000:3000"
