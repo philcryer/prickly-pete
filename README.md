@@ -1,4 +1,7 @@
 # prickly-pete
+
+**UPDATE** updated for DEF CON 29, 2021! New version of cowrie, new config/options, same out of the box goodness if you just want to try it out to get your feet wet! Ping me with any questions.
+
 A script using [Docker](https://www.docker.com) to quickly bring up some honeypots exposing 16 services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
 
 ### Security?

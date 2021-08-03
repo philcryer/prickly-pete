@@ -2,7 +2,8 @@ services:
   cowrie:
     image: cowrie/cowrie
     volumes:
-        - ./var/cowrie/log:/home/cowrie/cowrie/log
+        - ./var/cowrie/log:/cowrie/cowrie-git/var/log/cowrie
+        - ./src/configs/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg
     ports:
         - "22:2222"     	# ssh
         #- "2222:2222"        	# ssh

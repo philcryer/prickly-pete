@@ -14,7 +14,7 @@ IFS=$'\n\t'
 #/ Usage: prickly-pete [build] [start] [stop] [status]
 #/     Options:
 #/         start: build and start all containers
-#/         log: show live logs from all containers
+#/         logs: show live logs from all containers
 #/         status: show the running status of all conatainers
 #/         stop: stop and remove all containers
 #/         help: display this help message
@@ -41,10 +41,13 @@ done
 #### create log directory for script and app logs
 if [ ! -d 'var' ]; then
 	mkdir -p var/dionaea/{wwwroot,binaries,log,bitstreams}
+	touch var/dionaea/log
 	mkdir -p var/conpot
-	mkdir -p var/cowrie/log
+	touch var/conpot/conpot.log
+	#mkdir -p var/cowrie/log
+	#touch var/cowrie/log/cowrie.log
 	# obviously a bad hack here, let's figure this out later
-	chmod -R 777 var/cowrie/log
+	#chmod -R 777 var/cowrie/log
 fi
 
 #### create log files and rules
@@ -70,9 +73,11 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
                 printf "%s %s\n" "`date -u`" "prickly-pete: building containers" >> $log_file; 
 		docker-compose build ;;
 
-	log)        if [[ ! -f 'var/cowrie/log/cowrie.log' ]]; then    
-            echo "[ERROR] log files not found, are services running?"; exit 1
-        fi
+	#log)        if [[ ! -f 'var/cowrie/log/cowrie.log' ]]; then    
+        #    echo "[ERROR] log files not found, are services running?"; exit 1
+        #fi
+	#/cowrie/cowrie-git/var/log/cowrie/cowrie.json
+	logs)
         tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log;;
 
 	start) 
