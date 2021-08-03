@@ -60,3 +60,11 @@ services:
     #   - sriv04.testcom.com
     ports:
        - "3000:3000"
+
+  udpot:
+    image: jekil/udpot
+    #volumes:
+    #   - ./var/udpot/public:/opt/nodejs/public
+    ports:
+       - "5053:5053/udp"
+       - "5053:5053/tcp"
