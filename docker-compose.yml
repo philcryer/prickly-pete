@@ -10,11 +10,11 @@ services:
 
   dionaea:
     image: dinotools/dionaea
-    restart: always
+    #restart: always
     volumes:
        - ./var/dionaea/log:/opt/dionaea/var/log/dionaea
-       - ./var/dionaea/etc:/opt/dionaea/etc/dionaea
-       - ./var/dionaea/var:/opt/dionaea/var/libdionaea
+#       - ./var/dionaea/etc:/opt/dionaea/etc/dionaea
+#       - ./var/dionaea/var:/opt/dionaea/var/libdionaea
     ports:
        #- "21:21"      		# ftp
        - "42:42"        	# wins
