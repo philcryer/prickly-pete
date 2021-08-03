@@ -89,31 +89,45 @@ ssh localhost -p 2222 -l root
 ```
 $ sudo nmap -p- localhost
 
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 17:51 CDT
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 18:21 CDT
 Nmap scan report for localhost (127.0.0.1)
-Host is up (0.00028s latency).
+Host is up (0.013s latency).
 Other addresses for localhost (not scanned): ::1
-Not shown: 65518 closed ports
+Not shown: 65504 closed ports
 PORT      STATE    SERVICE
 21/tcp    open     ftp
+42/tcp    open     nameserver
+80/tcp    open     http
 102/tcp   open     iso-tsap
+135/tcp   open     msrpc
+443/tcp   open     https
+445/tcp   open     microsoft-ds
 502/tcp   open     mbap
 623/tcp   open     oob-ws-http
+1433/tcp  open     ms-sql-s
+1723/tcp  open     pptp
+1883/tcp  open     mqtt
 2222/tcp  open     EtherNetIP-1
 3000/tcp  open     ppp
+3306/tcp  open     mysql
+5053/tcp  open     rlm
+5060/tcp  open     sip
+5061/tcp  open     sip-tls
 8080/tcp  open     http-proxy
 8888/tcp  open     sun-answerbook
+11211/tcp open     memcache
 44818/tcp open     EtherNetIP-2
 47808/tcp open     bacnet
 49288/tcp open     unknown
+50384/tcp filtered unknown
 51413/tcp open     unknown
 55650/tcp open     unknown
 57621/tcp open     unknown
 57622/tcp open     unknown
+61179/tcp filtered unknown
 61500/tcp filtered unknown
-63334/tcp filtered unknown
 
-Nmap done: 1 IP address (1 host up) scanned in 5.94 seconds
+Nmap done: 1 IP address (1 host up) scanned in 6.28 seconds
 ```
 
 * curl
