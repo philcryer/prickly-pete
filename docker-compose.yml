@@ -9,9 +9,11 @@ services:
         #- "2222:2222"        	# ssh
 
   dionaea:
-    image: andrewmichaelsmith/dionaea
+    image: dinotools/dionaea
+    restart: always
     volumes:
-       - ./var/dionaea:/vol/dionaea
+       - ./var/dionaea/log:/opt/dionaea/var/log/dionaea
+
     ports:
        - "21:21"      		# ftp
        - "42:42"        	# wins
@@ -22,10 +24,14 @@ services:
        - "443:443"      	# https
        - "445:445"      	# microsoft-ds
        - "1433:1433"    	# ms-sql-s 
+       - "1723:1723"
+       - "1883:1883" 
+       - "1900:1900/udp"
        - "3306:3306"    	# mysql
        - "5060:5060"    	# sip
        - "5061:5061"    	# sip-tls
        - "5060:5060/udp" 	# sip
+       - "11211:11211"
 
   conpot:
     image: honeynet/conpot

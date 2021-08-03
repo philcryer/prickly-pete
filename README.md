@@ -2,7 +2,7 @@
 
 **UPDATE** updated for DEF CON 29, 2021! New version of cowrie, new config/options, same out of the box goodness if you just want to try it out to get your feet wet! Ping me with any questions.
 
-A script using [Docker](https://www.docker.com) to quickly bring up some honeypots exposing 16 services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
+A script using [Docker](https://www.docker.com) to quickly bring up some honeypots exposing over 16 services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
 
 ### Security?
 While this project is designed to help identify security issues, and was culled from others who likely have security in mind, I would NOT recommend running this in production environment without a complete security audit... but then again, YOLO!
@@ -87,27 +87,39 @@ ssh localhost -p 2222 -l root
 ```
 $ sudo nmap -p- localhost
 
-Starting Nmap 7.01 ( https://nmap.org ) at 2017-07-11 19:43 CDT
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 17:17 CDT
 Nmap scan report for localhost (127.0.0.1)
-Host is up (0.000021s latency).
-Not shown: 65517 closed ports
-PORT      STATE SERVICE
-21/tcp    open  ftp
-42/tcp    open  nameserver
-102/tcp   open  iso-tsap
-135/tcp   open  msrpc
-443/tcp   open  https
-445/tcp   open  microsoft-ds
-502/tcp   open  mbap
-623/tcp   open  oob-ws-http
-1433/tcp  open  ms-sql-s
-2222/tcp  open  EtherNetIP-1
-3306/tcp  open  mysql
-5060/tcp  open  sip
-5061/tcp  open  sip-tls
-8080/tcp  open  http-proxy
-8888/tcp  open  sun-answerbook
-47808/tcp open  unknown
+Host is up (0.00017s latency).
+Other addresses for localhost (not scanned): ::1
+Not shown: 65508 closed ports
+PORT      STATE    SERVICE
+21/tcp    open     ftp
+22/tcp    open     ssh
+42/tcp    open     nameserver
+80/tcp    open     http
+102/tcp   open     iso-tsap
+135/tcp   open     msrpc
+443/tcp   open     https
+445/tcp   open     microsoft-ds
+502/tcp   open     mbap
+623/tcp   open     oob-ws-http
+1433/tcp  open     ms-sql-s
+1723/tcp  open     pptp
+1883/tcp  open     mqtt
+3306/tcp  open     mysql
+5060/tcp  open     sip
+5061/tcp  open     sip-tls
+8080/tcp  open     http-proxy
+8888/tcp  open     sun-answerbook
+11211/tcp open     memcache
+47808/tcp open     bacnet
+49288/tcp open     unknown
+51413/tcp open     unknown
+55650/tcp open     unknown
+57621/tcp open     unknown
+57622/tcp open     unknown
+61500/tcp filtered unknown
+64131/tcp filtered unknown
 ```
 
 * curl
