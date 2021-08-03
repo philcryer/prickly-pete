@@ -1,42 +1,43 @@
-cowrie:
-  image: k0st/cowrie
-  volumes:
-   - ./var/cowrie/log:/home/cowrie/cowrie/log
-  ports:
-   #- "22:2222"         # OpenSSH, ssh
-   - "2222:2222"        # OpenSSH, ssh
+services:
+  cowrie:
+    image: cowrie/cowrie
+    volumes:
+        - ./var/cowrie/log:/home/cowrie/cowrie/log
+    ports:
+        - "22:2222"     	# ssh
+        #- "2222:2222"        	# ssh
 
-dionaea:
+  dionaea:
     image: andrewmichaelsmith/dionaea
     volumes:
        - ./var/dionaea:/vol/dionaea
     ports:
-       - "21:21"        # ftp
-       - "42:42"        # wins
-       - "69:69/udp"    # tftp
-       #- "80:80"       # http
-       - "8080:80"      # http
-       - "135:135"      # loc-srv
-       - "443:443"      # https
-       - "445:445"      # microsoft-ds
-       - "1433:1433"    # ms-sql-s 
-       - "3306:3306"    # mysql
-       - "5060:5060"    # sip
-       - "5061:5061"    # sip-tls
-       - "5060:5060/udp" # sip
+       - "21:21"      		# ftp
+       - "42:42"        	# wins
+       - "69:69/udp"    	# tftp
+       - "80:80"       		# http
+       #- "8080:80"      	# http
+       - "135:135"      	# loc-srv
+       - "443:443"      	# https
+       - "445:445"      	# microsoft-ds
+       - "1433:1433"    	# ms-sql-s 
+       - "3306:3306"    	# mysql
+       - "5060:5060"    	# sip
+       - "5061:5061"    	# sip-tls
+       - "5060:5060/udp" 	# sip
 
-conpot:
-  image: honeynet/conpot
-  volumes:
+  conpot:
+    image: honeynet/conpot
+    volumes:
        - ./var/conpot:/var/log/conpot
-  ports:
-       #- "80:80"       # SCADA UI, http
-       #- "8080:80"     # SCADA UI, http
-       - "8888:80"      # SCADA UI, http
-       - "102:102"      # S7Comm
-       - "502:502"      # Modbus
-       #- "161:161/udp" # SNMP
-       - "162:161/udp"  # SNMP
-       - "47808:47808"  # Bacnet
-       - "623:623"      # IPMI
+    ports:
+       #- "80:80"       	# SCADA UI, http
+       - "8080:80"      	# SCADA UI, http
+       - "8888:80"      	# SCADA UI, http
+       - "102:102"      	# S7Comm
+       - "502:502"      	# Modbus
+       - "161:161/udp"  	# SNMP
+       - "162:161/udp"  	# SNMP
+       - "47808:47808"  	# Bacnet
+       - "623:623"      	# IPMI
 
