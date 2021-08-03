@@ -75,7 +75,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
         #fi
 	#/cowrie/cowrie-git/var/log/cowrie/cowrie.json
 	logs)
-        tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea* var/conpot/conpot.log;;
+        tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea.log var/conpot/conpot.log;;
 
 	start) 
                 printf "%s %s\n" "`date -u`" "prickly-pete: starting containers" >> $log_file; 
