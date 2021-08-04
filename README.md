@@ -13,6 +13,7 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 * [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
 * [cowrie](https://github.com/cowrie/docker-cowrie) - an SSH/Telnet honeypot, originally based on Kippo, using the official DockerHub image [cowrie/cowrie](https://hub.docker.com/r/cowrie/cowrie)
 * [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot, using the official DockerHub image [dinotools/dionaea]https://hub.docker.com/r/dinotools/dionaea)
+* [HoneyPress](https://hub.docker.com/r/jondkelley/honeypress), a WordPress honeypot using the DockerHub image from [jondkelley/honeypress](https://hub.docker.com/r/jondkelley/honeypress)
 * [gate](https://hub.docker.com/r/anfa/gate), NodeJS webserver and honeypot running on :3000 with a fake index.html copied from nodejs.org (you can create your own and put it in src/gate/ to have it use that instead) TODO: get logging working
 * [udpot](https://hub.docker.com/r/jekil/udpot) a DNS honeypot which logs all requests to a SQLite database
 
@@ -32,23 +33,46 @@ git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 
 * Start
 
+Start all the honeypot services
+
 ```
 ./prickly-pete start
+[+] Running 7/7
+ ⠿ Network prickly-pete_default         Created                                                                                                                   0.3s
+ ⠿ Container prickly-pete_cowrie_1      Started                                                                                                                   1.8s
+ ⠿ Container prickly-pete_dionaea_1     Started                                                                                                               4.6s
+ ⠿ Container prickly-pete_gate_1        Started                                                                                                                   2.5s
+ ⠿ Container prickly-pete_conpot_1      Started                                                                                                                   4.3s
+ ⠿ Container prickly-pete_honeypress_1  Started                                                                                                                   2.3s
+ ⠿ Container prickly-pete_udpot_1       Started
 ```
 
 * Status
 
+Check the status of the services (normal `docker ps` stuff here)
+
 ```
 ./prickly-pete status
+NAME                        COMMAND                  SERVICE             STATUS              PORTS
+prickly-pete_conpot_1       "/home/conpot/.local…"   conpot              running             :::8888->80/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8888->80/tcp, :::8080->80/tcp, :::102->102/tcp, 0.0.0.0:102->102/tcp, 0.0.0.0:162->161/udp, 0.0.0.0:161->161/udp, :::162->161/udp, :::161->161/udp, :::502->502/tcp, 0.0.0.0:502->502/tcp, :::623->623/tcp, 0.0.0.0:623->623/tcp, :::44818->44818/tcp, 0.0.0.0:44818->44818/tcp, :::47808->47808/tcp, 0.0.0.0:47808->47808/tcp
+prickly-pete_cowrie_1       "cowrie start -n"        cowrie              running             0.0.0.0:2222->2222/tcp, :::2222->2222/tcp, 2223/tcp
+prickly-pete_dionaea_1      "/usr/local/sbin/ent…"   dionaea             running             :::21->21/tcp, 0.0.0.0:21->21/tcp, 0.0.0.0:42->42/tcp, :::42->42/tcp, :::69->69/udp, 0.0.0.0:69->69/udp, :::135->135/tcp, 0.0.0.0:135->135/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp, 0.0.0.0:445->445/tcp, :::445->445/tcp, :::1433->1433/tcp, 0.0.0.0:1433->1433/tcp, :::1723->1723/tcp, 0.0.0.0:1723->1723/tcp, :::1883->1883/tcp, 0.0.0.0:1883->1883/tcp, 0.0.0.0:1900->1900/udp, :::1900->1900/udp, :::3306->3306/tcp, 0.0.0.0:3306->3306/tcp, :::5060->5060/udp, 0.0.0.0:5060->5060/udp, :::5060->5060/tcp, 0.0.0.0:5060->5060/tcp, :::5061->5061/tcp, 0.0.0.0:5061->5061/tcp, 0.0.0.0:11211->11211/tcp, :::11211->11211/tcp
+prickly-pete_gate_1         "docker-entrypoint.s…"   gate                running             0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
+prickly-pete_honeypress_1   "/usr/bin/supervisor…"   honeypress          running             0.0.0.0:80->80/tcp, :::80->80/tcp
+prickly-pete_udpot_1        "/bin/sh -c 'python …"   udpot               running             0.0.0.0:5053->5053/tcp, :::5053->5053/tcp, 0.0.0.0:5053->5053/udp, :::5053->5053/udp
 ```
 
-* Log
+* Logs
+
+Tail all the logs in realtime
 
 ```
-./prickly-pete log
+./prickly-pete logs
 ```
 
 * Stopping
+
+Stop all services
 
 ```
 ./prickly-pete stop
@@ -89,14 +113,15 @@ ssh localhost -p 2222 -l root
 ```
 $ sudo nmap -p- localhost
 
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 18:21 CDT
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 19:39 CDT
 Nmap scan report for localhost (127.0.0.1)
-Host is up (0.013s latency).
+Host is up (0.00017s latency).
 Other addresses for localhost (not scanned): ::1
-Not shown: 65504 closed ports
+Not shown: 65505 closed ports
 PORT      STATE    SERVICE
 21/tcp    open     ftp
 42/tcp    open     nameserver
+53/tcp    open     domain
 80/tcp    open     http
 102/tcp   open     iso-tsap
 135/tcp   open     msrpc
@@ -119,21 +144,19 @@ PORT      STATE    SERVICE
 44818/tcp open     EtherNetIP-2
 47808/tcp open     bacnet
 49288/tcp open     unknown
-50384/tcp filtered unknown
 51413/tcp open     unknown
 55650/tcp open     unknown
 57621/tcp open     unknown
 57622/tcp open     unknown
-61179/tcp filtered unknown
 61500/tcp filtered unknown
 
-Nmap done: 1 IP address (1 host up) scanned in 6.28 seconds
+Nmap done: 1 IP address (1 host up) scanned in 5.33 seconds
 ```
 
 * curl
 
 ```
-curl localhost:443
+curl localhost:80
 ```
 
 * netstat
@@ -152,13 +175,18 @@ Software, existing projects, and ideas that I used to create this project
 
 * [Docker](https://docker.com/), [Docker-Compose](https://docker.com/compose), and [Docker Hub](https://hub.docker.com/) for prebuilt images
 * [Alpine Linux](https://alpinelinux.org/), a small Linux base image for Docker images that you should use if you're building your own
-* [andrewmichaelsmith/manuka](https://github.com/andrewmichaelsmith/manuka), Docker based honeypot (Dionaea & Kippo)
 * [mushorg/conpot](https://github.com/mushorg/conpot), a ICS/SCADA honeypot 
-* [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker), Dionaea running in Docker
-* [kost/docker-cowrie](https://github.com/kost/docker-cowrie), a version of Cowrie running in Docker
+* [cowrie](https://github.com/cowrie/docker-cowrie) an SSH/Telnet honeypot
+* [dionaea](https://github.com/DinoTools/dionaea) the dionaea honeypot
+* [HoneyPress](https://hub.docker.com/r/jondkelley/honeypress) a WordPress honeypot
+* [gate](https://hub.docker.com/r/anfa/gate) NodeJS webserver and honeypot
+* [udpot](https://hub.docker.com/r/jekil/udpot) a DNS honeypot 
 
 Older bits that are now legacy, but got us to where we are now
 
+* [andrewmichaelsmith/manuka](https://github.com/andrewmichaelsmith/manuka), Docker based honeypot (Dionaea & Kippo)
+* [DinoTools/dionaea-docker](https://github.com/DinoTools/dionaea-docker), Dionaea running in Docker
+* [kost/docker-cowrie](https://github.com/kost/docker-cowrie), a version of Cowrie running in Docker
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
 * [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"

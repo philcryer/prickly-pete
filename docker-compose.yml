@@ -5,22 +5,18 @@ services:
         - ./var/cowrie/log:/cowrie/cowrie-git/var/log/cowrie
         - ./src/configs/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg
     ports:
-        #- "22:2222"     	# ssh
+        #- "22:2222"     	# ssh (use this if you have :22 free!)
         - "2222:2222"        	# ssh
 
   dionaea:
     image: dinotools/dionaea
-    #restart: always
     volumes:
        - ./var/dionaea/log:/opt/dionaea/var/log/dionaea
-#       - ./var/dionaea/etc:/opt/dionaea/etc/dionaea
-#       - ./var/dionaea/var:/opt/dionaea/var/libdionaea
     ports:
-       #- "21:21"      		# ftp
+       - "21:21"      		# ftp
        - "42:42"        	# wins
-       #- "69:69/udp"    	# tftp
-       - "80:80"       		# http
-       #- "8080:80"      	# http
+       - "69:69/udp"    	# tftp
+       #- "80:80"       	# http
        - "135:135"      	# loc-srv
        - "443:443"      	# https
        - "445:445"      	# microsoft-ds
@@ -32,6 +28,7 @@ services:
        - "5060:5060"    	# sip
        - "5061:5061"    	# sip-tls
        - "5060:5060/udp" 	# sip
+       #- "8080:80"      	# http (alt)
        - "11211:11211"
 
   conpot:
@@ -39,8 +36,8 @@ services:
     volumes:
        - ./var/conpot:/var/log/conpot
     ports:
-       - "21:2121" 
-       - "69:6969/udp"
+       #- "21:2121" 
+       #- "69:6969/udp"
        #- "80:80"       	# SCADA UI, http
        - "102:102"      	# S7Comm
        - "161:161/udp"  	# SNMP
@@ -63,8 +60,15 @@ services:
 
   udpot:
     image: jekil/udpot
-    #volumes:
-    #   - ./var/udpot/public:/opt/nodejs/public
     ports:
        - "5053:5053/udp"
        - "5053:5053/tcp"
+       - "53:5053/udp"
+       - "53:5053/tcp"
+
+  honeypress:
+    image: jondkelley/honeypress
+    volumes:
+       - ./var/honeypress:/opt/honeypress/logs
+    ports:
+       - "80:80"
