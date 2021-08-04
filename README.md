@@ -1,7 +1,8 @@
 # prickly-pete
 
 <div align="center"><img src="src/logo.png" alt="Prickly Pete"></div>
-**UPDATE** updated for 2021! I've switched to running the the offical version of cowrie, and dionaea, so those are up to date, with more services and configurations! Also added new services like gate (a NodeJS webserver), Udpot, a DNS honeypot, and HoneyPress, a Wordpress honeypot! So there are far more services now by default, new config/options, but with the same out of the box goodness if you just want to try it out to get your feet wet! Ping me with any questions.
+
+**UPDATE** updated for 2021! I've switched to running the the offical version of cowrie, and dionaea, so those are up to date, with more services and configurations! Also added new services like gate (a NodeJS webserver), Udpot, a DNS honeypot, and HoneyPress, a Wordpress honeypot! So there are far more services now by default, new config/options, but with the same out of the box goodness if you just want to try it out to get your feet wet! Ping me with any questions. 
 
 **What is this?** This is a script that uses [Docker](https://www.docker.com) to quickly bring up some honeypots exposing a bunch of services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
 
