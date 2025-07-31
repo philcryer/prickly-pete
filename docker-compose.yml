@@ -1,3 +1,4 @@
+---
 services:
   cowrie:
     image: cowrie/cowrie
