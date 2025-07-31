@@ -1,0 +1,277 @@
+#!/usr/bin/env bash
+#===============================================================================
+# Source:  https://github.com/philcryer/prickly-pete
+# Author: philcryer < phil at philcryer dot com >
+# License: MIT
+#=============================================================================
+
+set -e
+
+## prompts
+function msg_status () {
+    echo -e "\x1B[01;34m[*]\x1B[0m $1" 
+}
+function msg_good () { 
+    echo -e "\x1B[01;32m[*]\x1B[0m $1" 
+}
+function msg_error () { 
+    echo -e "\x1B[01;31m[*]\x1B[0m $1" 
+}
+function msg_notification () { 
+    echo -e "\x1B[01;33m[*]\x1B[0m $1"
+}
+
+## usage
+usage() { grep '^#/' "$0" | cut -c4- ; exit 0 ; }
+#/ Usage: pp [build] [start] [stop] [status] [logs]
+#/     build: checkout projects and build docker containers
+#/     start: build and start all containers
+#/     stop: stop and remove all containers
+#/     status: show the running status of all conatainers
+#/     logs: show live logs from all containers
+#/     clean: remove all containers
+expr "$*" : ".*--help" > /dev/null && usage
+expr "$*" : ".*-h" > /dev/null && usage
+expr "$*" : ".*help" > /dev/null && usage
+if [[ $# -eq 0 ]] ; then
+	usage
+fi
+if [[ $# -gt 1 ]] ; then
+	usage
+fi
+
+## functions
+build(){
+    msg_notification "build starting"
+    if [ ! -d 'conpot' ]; then
+        msg_status "checking out conpot"
+        #git clone git@github.com:mushorg/conpot.git
+        git clone https://github.com/mushorg/conpot.git
+    fi
+    msg_notification "conpot checked out"
+
+    if [ ! -d 'docker-cowrie' ]; then
+        msg_status "checking out cowrie"
+#        git clone git@github.com:cowrie/cowrie.git
+        git clone https://github.com/vfreex/docker-cowrie.git
+    fi
+    msg_notification "cowrie checked out"
+
+    msg_status "building containers"
+    #cd cowrie/docker
+    #mkdir -p context
+    #cp ../requirements-output.txt .
+    #cp ../requirements.txt .
+    docker compose build
+    #cd -
+    msg_good "build completed"
+
+    #git clone git@github.com:mushorg/glutton.git
+    #git clone git@github.com:mushorg/tanner.git
+}
+
+## actions
+if [[ ${1} == 'build' ]] ; then
+    build; 
+fi
+
+if [[ ${1} == 'start' ]] ; then
+    build; 
+    docker compose up -d
+fi
+
+if [[ ${1} == 'stop' ]] ; then
+    docker compose stop
+fi
+
+if [[ ${1} == 'status' ]] ; then
+    docker compose ps
+fi
+
+if [[ ${1} == 'logs' ]] ; then
+    docker compose logs -f
+fi
+
+if [[ ${1} == 'clean' ]] ; then
+    docker compose down
+    docker rmi pp-conpot
+fi
+
+exit 0
+
+
+
+kick-off(){
+    clear
+    echo -e "\x1B[01;31m"//dev.to/thiht/shell-scripts-matter
+    echo "     |            |    |             |               |"
+    echo "  |        |              |        |             |"
+    cat src/logo-ascii.txt
+    msg_status "ohai, let's basejump!"
+}
+
+become-check(){
+    msg_notification "checking for become scheme (sudo or doas)"
+    if type sudo > /dev/null 2>&1; then
+        become_scheme=sudo
+    fi
+    if type doas > /dev/null 2>&1; then
+        become_scheme=doas
+    fi
+    msg_good "found $become_scheme, will use it for become scheme"
+}
+
+os-check(){
+    msg_notification "checking operating system"
+        if [ "$distro" == "alpine" ]; then
+            msg_good "$os ($distro) is supported, continuing"
+        else
+            msg_good "$os ($distro) is NOT supported. Exiting"; exit 1
+        fi
+}
+
+neovim-install(){
+    msg_notification "installing and configuring"
+    $become_scheme  apk add neovim tree-sitter-lua hunspell hunspell-en-us 
+    mkdir -p $HOME/.config 
+    cp -R config/nvim $HOME/.config/
+}
+
+software-install(){
+    msg_notification "doing a full system upgrade"
+    $become_scheme apk -U upgrade
+    msg_notification "installing ansible and supporting software"
+    $become_scheme apk add python3 py-pip git curl ansible ansible-lint
+    msg_notification "installing zsh and supporting software"
+    $become_scheme apk add zsh wl-clipboard
+    #alpine-zsh-config
+    msg_notification "installing and configuring starship.rs"
+    $become_scheme apk add starship starship-zsh-completion starship-zsh-plugin
+    cp config/zshrc $HOME/.zshrc
+    #zsh
+    #source $HOME/.zshrc
+    msg_good "all required software installed"
+}
+
+run-ansible(){
+    msg_status "handing off to ansible"
+    cd ansible
+    ansible-galaxy install -r requirements.yml
+    ansible-playbook main.yml -i inventory
+}
+
+install-dotfiles(){
+    msg_good "installing dotfiles"
+    if [ -d "dotfiles" ]; then
+	rm -rf dotfiles
+    fi
+    git clone https://github.com/philcryer/dotfiles.git
+    cd dotfiles/
+    if [ ! -f "$HOME/.gitconfig" ]; then
+        cp .gifconfig ${HOME}
+    fi
+    cp -R .gitignore .wgetrc .screenrc .tmux.conf .hushlogin .curlrc .abcde.conf .aliases ${HOME}
+    cd ..; rm -rf dotfiles
+}
+
+todo(){
+    cp config/zshrc ~/.zshrc
+    cp -R config/terminfo ~/.terminfo
+    cp -R config/nvim ~/.config/
+    cp -R config/wofi ~/.config/
+}
+
+main(){
+    kick-off;
+    become-check;
+    os-check;
+    software-install;
+    neovim-install;
+    #install-dotfiles;
+    #run-ansible;
+}
+
+main;
+
+exit 0
+
+
+
+#!/usr/bin/env bash
+
+# prickly-pete
+# 	a simple wrapper script to control the containers that run via this project:
+#	https://github.com/philcryer/prickly-pete
+# 
+# Thanks
+# 	this script developed from a well thoughtout template you can find here
+# 	https://dev.to/thiht/shell-scripts-matter (thanks http://twitter.com/Thiht)
+
+set -euo pipefail
+IFS=$'\n\t'
+
+
+#### check for required software
+for cli in docker docker-compose; do
+	if ! type "$cli" > /dev/null 2>&1; then
+       		echo "FAIL - $cli is not installed and in the PATH. Aborting."
+		exit 1
+        fi
+done
+
+#### create log directory for script and app logs
+if [ ! -d 'var' ]; then
+	mkdir -p var/dionaea/{log,etc,var,var/lib,wwwroot,binaries,log,bitstreams}
+	mkdir -p var/conpot
+	touch var/conpot/conpot.log
+	mkdir -p var/gate/public
+        cp src/gate/index.html var/gate/public/index.html 
+	mkdir -p var/honeypress
+	touch var/honeypress/auth.log
+fi
+
+#### create log files and rules
+readonly log_file="var/$(basename "$0").log"
+info()    { echo "[INFO]    $@" | tee -a "$log_file" >&2 ; }
+warning() { echo "[WARNING] $@" | tee -a "$log_file" >&2 ; }
+error()   { echo "[ERROR]   $@" | tee -a "$log_file" >&2 ; }
+fatal()   { echo "[FATAL]   $@" | tee -a "$log_file" >&2 ; exit 1 ; }
+
+#### cleanup routinue to be run after script exits
+cleanup() {
+    # Remove temporary files or Restart services
+    #echo "[INFO]    stopping" >> "$log_file"
+    printf "%s %s\n" "`date -u`" "prickly-pete: cleanup" >> $log_file
+}
+
+#### the script aktion
+if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
+    trap cleanup EXIT
+    
+    case "$1" in
+        build) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: building containers" >> $log_file; 
+		docker-compose build ;;
+
+	#log)        if [[ ! -f 'var/cowrie/log/cowrie.log' ]]; then    
+        #    echo "[ERROR] log files not found, are services running?"; exit 1
+        #fi
+	#/cowrie/cowrie-git/var/log/cowrie/cowrie.json
+	logs)
+        tail -f var/cowrie/log/cowrie.* var/dionaea/log/dionaea.log var/conpot/conpot.log var/honeypress/access.log var/honeypress/auth.log;;
+
+	start) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: starting containers" >> $log_file; 
+		docker-compose up -d ;;
+
+	status) docker-compose ps  ;;
+
+	stop) 
+                printf "%s %s\n" "`date -u`" "prickly-pete: stopping containers" >> $log_file; 
+		docker-compose down;
+		printf "%s %s\n" "`date -u`" "prickly-pete: exiting" >> $log_file;
+		exit 0;;
+
+    esac
+fi
+
