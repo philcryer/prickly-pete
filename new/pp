@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+#===============================================================================
+# Source:  https://github.com/philcryer/prickly-pete
+# Author: philcryer < phil at philcryer dot com >
+# License: MIT
+#=============================================================================
+
+set -e
+
+## prompts
+function msg_status () {
+    echo -e "\x1B[01;34m[*]\x1B[0m $1" 
+}
+function msg_good () { 
+    echo -e "\x1B[01;32m[*]\x1B[0m $1" 
+}
+function msg_error () { 
+    echo -e "\x1B[01;31m[*]\x1B[0m $1" 
+}
+function msg_notification () { 
+    echo -e "\x1B[01;33m[*]\x1B[0m $1"
+}
+
+## usage
+usage() { 
+    echo "Usage: pp [build] [start] [stop] [status] [logs]"
+    echo "  build: build projects"
+    echo "  start: start, and build if required, all containers"
+    echo "  stop: stop all containers"
+    echo "  status: show the running status of all containers"
+    echo "  logs: show live logs from all containers"
+    echo "  clean: remove all containers"
+    exit 0
+}
+expr "$*" : ".*--help" > /dev/null && usage
+expr "$*" : ".*-h" > /dev/null && usage
+expr "$*" : ".*help" > /dev/null && usage
+if [[ $# -eq 0 ]] ; then
+	usage
+fi
+if [[ $# -gt 1 ]] ; then
+	usage
+fi
+
+## logo
+logo(){
+    echo "____________"
+    echo "| ___ \ ___ |   Prickly"
+    echo "| |_/ / |_/ /   e"
+    echo "|  __/|  __/    t     - honeypots, running in docker"     
+    echo "| |   | |       e     - created in 2019, last updated 07-2025"
+    echo "\_|   \_|"
+    echo
+}
+logo;
+
+## functions
+checkout(){
+    msg_notification "checking out code"
+    if [ ! -d 'src/conpot' ]; then
+        msg_status "conpot: checking out"
+        git clone https://github.com/mushorg/conpot.git src/conpot
+    fi
+    msg_notification "conpot: checked out"
+
+    if [ ! -d 'src/cowrie' ]; then
+        msg_status "cowrie: checking out"
+        git clone https://github.com/cowrie/cowrie.git src/cowrie
+    fi
+    msg_notification "cowrie: checked out"
+}
+
+build(){
+    msg_notification "build starting"
+    export COMPOSE_BAKE=true
+
+    msg_status "cowrie: building container"
+    docker compose pull
+    msg_good "cowrie: container built"
+
+    #git clone git@github.com:mushorg/glutton.git
+    #git clone git@github.com:mushorg/tanner.git
+}
+
+volumes(){
+    msg_notification "volumes and logs, saved as docker volumes"
+    #docker_volumes=$(cat docker-compose.yml|grep ppv|grep -v "/"|cut -d":" -f1 | awk '{$1=$1};1')
+    docker_volumes=$(docker volume ls --filter "name=ppv" --format "table {{.Name}} - {{.Mountpoint}}")
+    echo $docker_volumes
+}
+
+## actions
+if [[ ${1} == 'build' ]] ; then
+    checkout;
+    build; 
+fi
+
+if [[ ${1} == 'start' ]] ; then
+    checkout;
+    build; 
+    docker compose up -d
+fi
+
+if [[ ${1} == 'stop' ]] ; then
+    docker compose stop
+fi
+
+if [[ ${1} == 'status' ]] ; then
+    msg_status "container statuses"
+    docker compose ps
+    volumes;
+fi
+
+if [[ ${1} == 'logs' ]] ; then
+    docker compose logs -f
+fi
+
+if [[ ${1} == 'clean' ]] ; then
+    docker compose down
+    volumes;
+    #docker rmi pp-conpot
+    #docker compose down --rmi all -v
+fi
+
+exit 0
+
