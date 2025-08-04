@@ -30,6 +30,7 @@ usage() {
     echo "  status: show the running status of all containers"
     echo "  logs: show live logs from all containers"
     echo "  clean: remove all containers"
+    echo "  nuke: clean, but also remove all collected data and logs"
     exit 0
 }
 expr "$*" : ".*--help" > /dev/null && usage
@@ -48,7 +49,7 @@ logo(){
     echo "| ___ \ ___ |   Prickly"
     echo "| |_/ / |_/ /   e"
     echo "|  __/|  __/    t     - honeypots, running in docker"     
-    echo "| |   | |       e     - created in 2019, last updated 07-2025"
+    echo "| |   | |       e     - created in 2019, updated Summer 2025"
     echo "\_|   \_|"
     echo
 }
@@ -120,6 +121,11 @@ if [[ ${1} == 'clean' ]] ; then
     volumes;
     #docker rmi pp-conpot
     #docker compose down --rmi all -v
+fi
+
+if [[ ${1} == 'nuke' ]] ; then
+    docker compose down
+    docker compose down --rmi all -v
 fi
 
 exit 0
