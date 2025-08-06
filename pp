@@ -77,6 +77,12 @@ checkout(){
         git clone https://github.com/johnnykv/heralding.git src/heralding
     fi
     msg_notification "heraldinge: checked out"
+
+    if [ ! -d 'src/honeyaml' ]; then
+        msg_status "honeyaml: checking out"
+        git clone https://github.com/mmta/honeyaml.git src/honeyaml
+    fi
+    msg_notification "honeyaml: checked out"
 }
 
 build(){
@@ -95,8 +101,9 @@ build(){
     docker compose pull
     msg_good "heralding: container built"
 
-    #git clone git@github.com:mushorg/glutton.git
-    #git clone git@github.com:mushorg/tanner.git
+    msg_status "honeyaml: building container"
+    docker compose pull
+    msg_good "honeyaml: container built"
 }
 
 volumes(){

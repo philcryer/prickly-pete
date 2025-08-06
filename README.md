@@ -21,8 +21,8 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 ### Existing
 * [Conpot](https://github.com/mushorg/conpot.git) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
 * [Cowrie](https://github.com/cowrie/cowrie.git) - an SSH/Telnet honeypot, originally based on Kippo
-* [Heralding](https://github.com/johnnykv/heralding.git)
-
+* [Heralding](https://github.com/johnnykv/heralding.git) - a simple honeypot that collects credentials, currently supporting: ftp, telnet, ssh, http, https, pop3, pop3s, imap, imaps, smtp, vnc, postgresql and socks5.
+* [Honeyaml](https://github.com/mmta/honeyaml) - an API honeypot whose endpoints and responses are all configurable through a YAML file, supports JWT-based HTTP bearer/token authentication, and logs all accesses into a file in JSON lines format
 
 ### Past
 
@@ -175,6 +175,12 @@ Nmap done: 1 IP address (1 host up) scanned in 4.42 seconds
 
 ```
 curl localhost:80
+```
+
+* curl (API)
+
+```
+curl 'localhost:8080/auth' -s -XPOST -d'{ "username": "admin", "password": "admpasswd", "realm": "asgard" }'
 ```
 
 * netstat

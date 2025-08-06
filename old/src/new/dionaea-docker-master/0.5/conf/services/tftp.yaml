@@ -1,3 +1,0 @@
-- name: tftp
-  config:
-    root: /opt/dionaea/var/dionaea/roots/tftp

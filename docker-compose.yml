@@ -29,7 +29,6 @@ services:
 
   heralding:
     build: ./src/heralding
-    # avail ports 21 22 23 25 80 110 143 443 465 993 995 1080 2222 3306 3389 5432 5900
     ports:
       - 25:25
       - 110:110
@@ -48,8 +47,18 @@ services:
     volumes:
       - ppv-heralding-var:/var/log
 
+  honeyaml:
+    image: mmta/honeyaml
+    #build: ./src/honeyaml/docker
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    volumes:
+      - ppv-honeyaml-var:/honeyaml/logs
+
 volumes:
   ppv-cowrie-etc:
   ppv-cowrie-var:
   ppv-conpot-var:
   ppv-heralding-var:
+  ppv-honeyaml-var:
