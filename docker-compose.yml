@@ -56,9 +56,64 @@ services:
     volumes:
       - ppv-honeyaml-var:/honeyaml/logs
 
+  #ciscoasa_honeypot:
+  #  build: src/ciscoasa_honeypot
+  #  ports:
+  #    - 8443:8443
+  #    - 500:5000/udp
+  #    - 5000:5000/udp
+  #  restart: unless-stopped
+  #  volumes:
+  #    - ppv-ciscoasa_honeypot-var:/var/log
+
+  #ddospot:
+  #    build:
+  #        context: src/ddospot-master
+  #    image: aelth/simpledns
+  #    ports:
+  #        - target: 19
+  #          published: 19 
+  #          protocol: udp
+  #          mode: host
+  #        - target: 53
+  #          published: 54
+  #          protocol: udp
+  #          mode: host
+  #        - target: 123
+  #          published: 123
+  #          protocol: udp
+  #          mode: host
+  #        - target: 161
+  #          published: 161
+  #          protocol: udp
+  #          mode: host
+  #        - target: 1900
+  #          published: 1901
+  #          protocol: udp
+  #          mode: host
+  #    restart: unless-stopped
+  #    volumes:
+  #        - ppv-ddospot-bl:/ddospot/bl
+  #        - ppv-ddospot-db:/ddospot/db
+  #        - ppv-ddospot-logs:/ddospot/logs
+  #    networks:
+  #        ddospot:
+  #            ipv4_address: 172.18.0.2
+
+#networks:
+#    ddospot:
+#        name: 'ddospot-net'
+#        driver: "bridge"
+#        ipam:
+#            config:
+#                - subnet: 172.18.0.1/24
+
 volumes:
   ppv-cowrie-etc:
   ppv-cowrie-var:
   ppv-conpot-var:
   ppv-heralding-var:
   ppv-honeyaml-var:
+#  ppv-ddospot-bl:
+#  ppv-ddospot-db:
+#  ppv-ddospot-logs:

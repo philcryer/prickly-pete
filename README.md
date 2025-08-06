@@ -1,5 +1,4 @@
 # prickly-pete
-
 <div align="center"><img src="src/logo.png" alt="Prickly Pete"></div>
 
 **UPDATE** Prickly-Pete has been fully updated for 2025 (DEF CON 33). Improvements 
@@ -9,7 +8,6 @@
     * logs and all output collected as docker volumes now, output shows you were
 
 ## Overview 
-
 Prickly-Pete is a script that uses [Docker](https://www.docker.com) to quickly bring up some honeypots exposing a bunch of services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. Using Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services greatly speeding up deployment time while reducing system requirements. 
 
 ## Security?
@@ -23,13 +21,6 @@ prickly-pete uses Docker and Docker-Compose to bring up the following honeypots,
 * [Cowrie](https://github.com/cowrie/cowrie.git) - an SSH/Telnet honeypot, originally based on Kippo
 * [Heralding](https://github.com/johnnykv/heralding.git) - a simple honeypot that collects credentials, currently supporting: ftp, telnet, ssh, http, https, pop3, pop3s, imap, imaps, smtp, vnc, postgresql and socks5.
 * [Honeyaml](https://github.com/mmta/honeyaml) - an API honeypot whose endpoints and responses are all configurable through a YAML file, supports JWT-based HTTP bearer/token authentication, and logs all accesses into a file in JSON lines format
-
-### Past
-
-* [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot, using the official DockerHub image [dinotools/dionaea](https://hub.docker.com/r/dinotools/dionaea)
-* [HoneyPress](https://hub.docker.com/r/jondkelley/honeypress), a WordPress honeypot using the DockerHub image from [jondkelley/honeypress](https://hub.docker.com/r/jondkelley/honeypress)
-* [gate](https://hub.docker.com/r/anfa/gate), NodeJS webserver and honeypot running on :3000 with a fake index.html copied from nodejs.org (you can create your own and put it in src/gate/ to have it use that instead) TODO: get logging working
-* [udpot](https://hub.docker.com/r/jekil/udpot) a DNS honeypot which logs all requests to a SQLite database
 
 ## Requirements
 
@@ -88,6 +79,51 @@ prickly-pete_ppv-cowrie-var - /var/lib/docker/volumes/prickly-pete_ppv-cowrie-va
 prickly-pete_ppv-heralding-var - /var/lib/docker/volumes/prickly-pete_ppv-heralding-var/_data
 ```
 
+* Scan
+
+Use nmap to scan open ports in `pp`
+
+```
+❯ ./pp scan
+____________
+| ___ \ ___ |   Prickly
+| |_/ / |_/ /   e
+|  __/|  __/    t     - honeypots, running in docker
+| |   | |       e     - created in 2019, updated Summer 2025
+\_|   \_|
+
+[*] scan: scanning local ports via nmap (nmap -p- localhost)
+Starting Nmap 7.97 ( https://nmap.org ) at 2025-08-06 20:24 +0000
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00018s latency).
+Other addresses for localhost (not scanned): ::1
+Not shown: 65514 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+22/tcp    open  ssh
+23/tcp    open  telnet
+25/tcp    open  smtp
+80/tcp    open  http
+102/tcp   open  iso-tsap
+110/tcp   open  pop3
+143/tcp   open  imap
+443/tcp   open  https
+465/tcp   open  smtps
+502/tcp   open  mbap
+993/tcp   open  imaps
+995/tcp   open  pop3s
+1080/tcp  open  socks
+2222/tcp  open  EtherNetIP-1
+3306/tcp  open  mysql
+3389/tcp  open  ms-wbt-server
+5432/tcp  open  postgresql
+5900/tcp  open  vnc
+6666/tcp  open  irc
+44818/tcp open  EtherNetIP-2
+
+Nmap done: 1 IP address (1 host up) scanned in 3.49 seconds
+```
+
 * Logs
 
 Tail all the logs in realtime
@@ -106,7 +142,17 @@ Stop all services
 
 ### Output
 
-All logs, and any downloaded malware or other bits, can be found in script created `var` directory, which will persist after the process ends. Note that restarting the script will use the same directories and will include all new logs/downloads. 
+All logs, and any downloaded malware or other bits, can be found in the docker volumes. To see the locations of the files:
+
+```
+./pp volumes
+```
+These will persist after the process ends, and subsquent runs will add to those same volumes. To clear them:
+
+```
+./pp nuke
+```
+
 
 ### Issues
 
@@ -214,29 +260,10 @@ Older bits that are now legacy, but got us to where we are now
 * [glastopf](https://github.com/mushorg/glastopf) - Glastopf is a Python web application honeypot founded by Lukas Rist.
 * [honeypot-for-tcp-32764](https://github.com/knalli/honeypot-for-tcp-32764) - a first try to mock the router backdoor "TCP32764" found in several router firmwares at the end of 2013. The POC of the backdoor is included with the project.
 * [nepenthes](http://nepenthes.carnivore.it/)- a honeypot that works by emulating widespread vulns and then catches and stores viruses worms using these vulns (working to implement [Dionaea](http://dionaea.carnivore.it/) to take its place)"
+* [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot, using the official DockerHub image [dinotools/dionaea](https://hub.docker.com/r/dinotools/dionaea)
+* [HoneyPress](https://hub.docker.com/r/jondkelley/honeypress), a WordPress honeypot using the DockerHub image from [jondkelley/honeypress](https://hub.docker.com/r/jondkelley/honeypress)
+* [gate](https://hub.docker.com/r/anfa/gate), NodeJS webserver and honeypot running on :3000 with a fake index.html copied from nodejs.org (you can create your own and put it in src/gate/ to have it use that instead) TODO: get logging working
+* [udpot](https://hub.docker.com/r/jekil/udpot) a DNS honeypot which logs all requests to a SQLite database
+* [Ciscoasa_honeypot](https://github.com/Cymmetria/ciscoasa_honeypot.git) - a low interaction honeypot for the Cisco ASA component capable of detecting CVE-2018-0101, a DoS and remote code execution vulnerability
 
-## Prickly-Pete?
-
-__George,__ _driving in the car with the Rosses:_ "And that leads into the master bedroom."
-
-__Mrs. Ross:__ "Tell us more."
-
-__George:__ "You want to hear more? The master bedroom opens into the solarium."
-
-__Mr. Ross:__ "Another solarium?"
-
-__George:__ "Yes, two solariums. Quite a find. And I have horses, too."
-
-![](src/imgs/snoopy_and_prickly_pete.jpg)
-
-__Mr. Ross:__ "What are their names?"
-
-__George:__ "Snoopy and Prickly Pete. Should I keep driving?"
-
-__Mrs. Ross:__ "Oh, look, an antique stand. Pull over. We'll buy you a 
-housewarming gift."
-
-__George,__ _chuckling to himself:_ "Housewarming gift."
-
-__George,__ _swerving the car to go to the antique stand:_ "All right, we're taking
-it up a notch!"
+### Thanks

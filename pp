@@ -25,11 +25,12 @@ function msg_notification () {
 
 ## usage
 usage() { 
-    echo "Usage: pp [build] [start] [stop] [status] [logs]"
+    echo "Usage: pp [build] [start] [stop] [status] [logs] [clean] [nuke]"
     echo "  build: build projects"
     echo "  start: start, and build if required, all containers"
     echo "  stop: stop all containers"
     echo "  status: show the running status of all containers"
+    echo "  scan: scan ports on localhost (requires nmap)"
     echo "  logs: show live logs from all containers"
     echo "  clean: remove all containers"
     echo "  nuke: clean, but also remove all collected data and logs"
@@ -83,6 +84,23 @@ checkout(){
         git clone https://github.com/mmta/honeyaml.git src/honeyaml
     fi
     msg_notification "honeyaml: checked out"
+
+
+    #if [ ! -d 'src/ciscoasa_honeypot' ]; then
+    #    msg_status "ciscoasa_honeypot: checking out"
+    #    git clone https://github.com/Cymmetria/ciscoasa_honeypot.git src/ciscoasa_honeypot
+    #fi
+    #msg_notification "honeyaml: checked out"
+
+    #if [ ! -d 'src/ddospot-master-' ]; then
+    #    msg_status "ddospot: checking out"
+    #    #git clone https://github.com/aelth/ddospot.git src/ddospot
+    #    cd src
+    #    curl -L -O https://github.com/aelth/ddospot/archive/refs/heads/master.zip
+    #    unzip master.zip
+    #    cd -
+    #fi
+    #msg_notification "ddospot: checked out"
 }
 
 build(){
@@ -104,6 +122,14 @@ build(){
     msg_status "honeyaml: building container"
     docker compose pull
     msg_good "honeyaml: container built"
+
+    #msg_status "ciscoasa_honeypot: building container"
+    #docker compose pull
+    #msg_good "ciscoasa_honeypot: container built"
+
+    #msg_status "ddospot: building container"
+    #docker compose pull
+    #msg_good "ddospot: container built"
 }
 
 volumes(){
@@ -138,6 +164,11 @@ if [[ ${1} == 'status' ]] ; then
     volumes;
 fi
 
+if [[ ${1} == 'scan' ]] ; then
+    msg_notification "scan: scanning local ports via nmap (nmap -p- localhost)"
+    nmap -p- localhost
+fi
+
 if [[ ${1} == 'logs' ]] ; then
     msg_notification "logs: show live container logs"
     docker compose logs -f
@@ -156,4 +187,3 @@ if [[ ${1} == 'nuke' ]] ; then
 fi
 
 exit 0
-
