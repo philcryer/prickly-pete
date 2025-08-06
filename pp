@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #===============================================================================
+# Description: A script using Docker and Docker Compose to quickly bring up some
+#    honeypots exposing lots of services. For research, reconnaissance, and fun. 
 # Source:  https://github.com/philcryer/prickly-pete
 # Author: philcryer < phil at philcryer dot com >
 # License: MIT
@@ -79,15 +81,19 @@ build(){
     docker compose pull
     msg_good "cowrie: container built"
 
+    msg_status "conpot: building container"
+    docker compose pull
+    msg_good "conpot: container built"
+
     #git clone git@github.com:mushorg/glutton.git
     #git clone git@github.com:mushorg/tanner.git
 }
 
 volumes(){
-    msg_notification "volumes and logs, saved as docker volumes"
-    #docker_volumes=$(cat docker-compose.yml|grep ppv|grep -v "/"|cut -d":" -f1 | awk '{$1=$1};1')
-    docker_volumes=$(docker volume ls --filter "name=ppv" --format "table {{.Name}} - {{.Mountpoint}}")
-    echo $docker_volumes
+    echo; msg_notification "volumes and logs, saved as docker volumes"
+    tmpfile=/tmp/pp.XXXXXX
+    docker_volumes=$(docker volume ls --filter "name=ppv" --format "table {{.Name}} - {{.Mountpoint}}" > $tmpfile)
+    cat $tmpfile; rm $tmpfile
 }
 
 ## actions

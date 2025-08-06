@@ -2,3 +2,6 @@ config.cfg
 .updated
 nohup.out
 var
+src
+logs
+*.log
