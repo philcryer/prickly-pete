@@ -2,18 +2,30 @@
 
 <div align="center"><img src="src/logo.png" alt="Prickly Pete"></div>
 
-**UPDATE** Prickly Pete has been completely updated for 2021! I've switched to running the the offical version of cowrie, and dionaea, so those are up to date, with more services and configurations! Also added new services like gate (a NodeJS webserver), Udpot, a DNS honeypot, and HoneyPress, a Wordpress honeypot! So there are far more services now by default, new config/options, but with the same out of the box goodness if you just want to try it out to get your feet wet! Ping me with any questions. 
+**UPDATE** Prickly-Pete has been fully updated for 2025 (DEF CON 33). Improvements 
+    * newer honeypot containers
+    * more ports now exposed by default
+    * ability to pre-build containers so they're ready to run when needed
+    * logs and all output collected as docker volumes now, output shows you were
 
-**What is this?** This is a script that uses [Docker](https://www.docker.com) to quickly bring up some honeypots exposing a bunch of services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. I've completely rewritten this (July 2017) to use Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services, greatly speeding up deployment time while reducing system requirements. 
+## Overview 
 
-### Security?
+Prickly-Pete is a script that uses [Docker](https://www.docker.com) to quickly bring up some honeypots exposing a bunch of services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. Using Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services greatly speeding up deployment time while reducing system requirements. 
+
+## Security?
 While this project is designed to help identify security issues, and was culled from others who likely have security in mind, I would NOT recommend running this in production environment without a complete security audit... but then again, YOLO!
 
 ## Honeypots
 prickly-pete uses Docker and Docker-Compose to bring up the following honeypots, automatically, with no configuration or extra steps necessary.
 
-* [contpot](https://pypi.python.org/pypi/Conpot) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
-* [cowrie](https://github.com/cowrie/docker-cowrie) - an SSH/Telnet honeypot, originally based on Kippo, using the official DockerHub image [cowrie/cowrie](https://hub.docker.com/r/cowrie/cowrie)
+### Existing
+* [Conpot](https://github.com/mushorg/conpot.git) - an ICS honeypot with the goal to collect intelligence about the motives and methods of adversaries targeting industrial control systems
+* [Cowrie](https://github.com/cowrie/cowrie.git) - an SSH/Telnet honeypot, originally based on Kippo
+* [Heralding](https://github.com/johnnykv/heralding.git)
+
+
+### Past
+
 * [dionaea](https://github.com/DinoTools/dionaea), the dionaea honeypot, using the official DockerHub image [dinotools/dionaea](https://hub.docker.com/r/dinotools/dionaea)
 * [HoneyPress](https://hub.docker.com/r/jondkelley/honeypress), a WordPress honeypot using the DockerHub image from [jondkelley/honeypress](https://hub.docker.com/r/jondkelley/honeypress)
 * [gate](https://hub.docker.com/r/anfa/gate), NodeJS webserver and honeypot running on :3000 with a fake index.html copied from nodejs.org (you can create your own and put it in src/gate/ to have it use that instead) TODO: get logging working
@@ -33,20 +45,20 @@ Prickly-Pete will run on any 64-bit computer that has `git`, `Docker`, and `Dock
 git clone https://github.com/philcryer/prickly-pete.git && cd prickly-pete
 ```
 
-* Start
+* Build
 
-Start all the honeypot services
+Build all the honeypot services
 
 ```
-./prickly-pete start
-[+] Running 7/7
- ⠿ Network prickly-pete_default         Created                                                                                                                   0.3s
- ⠿ Container prickly-pete_cowrie_1      Started                                                                                                                   1.8s
- ⠿ Container prickly-pete_dionaea_1     Started                                                                                                               4.6s
- ⠿ Container prickly-pete_gate_1        Started                                                                                                                   2.5s
- ⠿ Container prickly-pete_conpot_1      Started                                                                                                                   4.3s
- ⠿ Container prickly-pete_honeypress_1  Started                                                                                                                   2.3s
- ⠿ Container prickly-pete_udpot_1       Started
+./pp build
+```
+
+* Start
+
+Start all the honeypot services (implies `build`)
+
+```
+./pp start
 ```
 
 * Status
@@ -54,14 +66,26 @@ Start all the honeypot services
 Check the status of the services (normal `docker ps` stuff here)
 
 ```
-./prickly-pete status
-NAME                        COMMAND                  SERVICE             STATUS              PORTS
-prickly-pete_conpot_1       "/home/conpot/.local…"   conpot              running             :::8888->80/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8888->80/tcp, :::8080->80/tcp, :::102->102/tcp, 0.0.0.0:102->102/tcp, 0.0.0.0:162->161/udp, 0.0.0.0:161->161/udp, :::162->161/udp, :::161->161/udp, :::502->502/tcp, 0.0.0.0:502->502/tcp, :::623->623/tcp, 0.0.0.0:623->623/tcp, :::44818->44818/tcp, 0.0.0.0:44818->44818/tcp, :::47808->47808/tcp, 0.0.0.0:47808->47808/tcp
-prickly-pete_cowrie_1       "cowrie start -n"        cowrie              running             0.0.0.0:2222->2222/tcp, :::2222->2222/tcp, 2223/tcp
-prickly-pete_dionaea_1      "/usr/local/sbin/ent…"   dionaea             running             :::21->21/tcp, 0.0.0.0:21->21/tcp, 0.0.0.0:42->42/tcp, :::42->42/tcp, :::69->69/udp, 0.0.0.0:69->69/udp, :::135->135/tcp, 0.0.0.0:135->135/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp, 0.0.0.0:445->445/tcp, :::445->445/tcp, :::1433->1433/tcp, 0.0.0.0:1433->1433/tcp, :::1723->1723/tcp, 0.0.0.0:1723->1723/tcp, :::1883->1883/tcp, 0.0.0.0:1883->1883/tcp, 0.0.0.0:1900->1900/udp, :::1900->1900/udp, :::3306->3306/tcp, 0.0.0.0:3306->3306/tcp, :::5060->5060/udp, 0.0.0.0:5060->5060/udp, :::5060->5060/tcp, 0.0.0.0:5060->5060/tcp, :::5061->5061/tcp, 0.0.0.0:5061->5061/tcp, 0.0.0.0:11211->11211/tcp, :::11211->11211/tcp
-prickly-pete_gate_1         "docker-entrypoint.s…"   gate                running             0.0.0.0:3000->3000/tcp, :::3000->3000/tcp
-prickly-pete_honeypress_1   "/usr/bin/supervisor…"   honeypress          running             0.0.0.0:80->80/tcp, :::80->80/tcp
-prickly-pete_udpot_1        "/bin/sh -c 'python …"   udpot               running             0.0.0.0:5053->5053/tcp, :::5053->5053/tcp, 0.0.0.0:5053->5053/udp, :::5053->5053/udp
+./pp status
+____________
+| ___ \ ___ |   Prickly
+| |_/ / |_/ /   e
+|  __/|  __/    t     - honeypots, running in docker
+| |   | |       e     - created in 2019, updated Summer 2025
+\_|   \_|
+
+[01;33m[*][0m status: running containers and their ports
+NAME                       IMAGE                    COMMAND                  SERVICE     CREATED          STATUS          PORTS
+prickly-pete-conpot-1      prickly-pete-conpot      "conpot --template d…"   conpot      12 minutes ago   Up 12 minutes   0.0.0.0:44818->44818/tcp, [::]:44818->44818/tcp, 0.0.0.0:47808->47808/udp, [::]:47808->47808/udp, 0.0.0.0:21->2121/tcp, [::]:21->2121/tcp, 0.0.0.0:502->5020/tcp, [::]:502->5020/tcp, 0.0.0.0:623->6230/udp, [::]:623->6230/udp, 0.0.0.0:69->6969/udp, [::]:69->6969/udp, 0.0.0.0:80->8800/tcp, [::]:80->8800/tcp, 0.0.0.0:102->10201/tcp, [::]:102->10201/tcp, 0.0.0.0:161->16100/udp, [::]:161->16100/udp
+prickly-pete-cowrie-1      cowrie/cowrie            "/cowrie/cowrie-env/…"   cowrie      56 minutes ago   Up 12 minutes   0.0.0.0:22->2222/tcp, [::]:22->2222/tcp, 0.0.0.0:23->2223/tcp, [::]:23->2223/tcp
+prickly-pete-heralding-1   prickly-pete-heralding   "heralding"              heralding   12 minutes ago   Up 12 minutes   21-23/tcp, 0.0.0.0:25->25/tcp, [::]:25->25/tcp, 0.0.0.0:110->110/tcp, [::]:110->110/tcp, 0.0.0.0:143->143/tcp, [::]:143->143/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:465->465/tcp, [::]:465->465/tcp, 0.0.0.0:993->993/tcp, [::]:993->993/tcp, 0.0.0.0:995->995/tcp, [::]:995->995/tcp, 0.0.0.0:1080->1080/tcp, [::]:1080->1080/tcp, 0.0.0.0:2222->2222/tcp, [::]:2222->2222/tcp, 0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp, 0.0.0.0:3389->3389/tcp, [::]:3389->3389/tcp, 0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp, 80/tcp, 0.0.0.0:5900->5900/tcp, [::]:5900->5900/tcp
+
+[01;33m[*][0m volumes: all container volumes holding logs and output data
+VOLUME NAME - MOUNTPOINT
+prickly-pete_ppv-conpot-var - /var/lib/docker/volumes/prickly-pete_ppv-conpot-var/_data
+prickly-pete_ppv-cowrie-etc - /var/lib/docker/volumes/prickly-pete_ppv-cowrie-etc/_data
+prickly-pete_ppv-cowrie-var - /var/lib/docker/volumes/prickly-pete_ppv-cowrie-var/_data
+prickly-pete_ppv-heralding-var - /var/lib/docker/volumes/prickly-pete_ppv-heralding-var/_data
 ```
 
 * Logs
@@ -72,7 +96,7 @@ Tail all the logs in realtime
 ./prickly-pete logs
 ```
 
-* Stopping
+* Stop
 
 Stop all services
 
@@ -107,52 +131,44 @@ Once up, see what you can see using various system tools, which should be instal
 * ssh
 
 ```
-ssh localhost -p 2222 -l root
+ssh localhost -p 22 -l root
 ```
+
+Passord: `toor`
 
 * nmap
 
 ```
 $ sudo nmap -p- localhost
 
-Starting Nmap 7.91 ( https://nmap.org ) at 2021-08-03 19:39 CDT
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.00017s latency).
-Other addresses for localhost (not scanned): ::1
-Not shown: 65505 closed ports
-PORT      STATE    SERVICE
-21/tcp    open     ftp
-42/tcp    open     nameserver
-53/tcp    open     domain
-80/tcp    open     http
-102/tcp   open     iso-tsap
-135/tcp   open     msrpc
-443/tcp   open     https
-445/tcp   open     microsoft-ds
-502/tcp   open     mbap
-623/tcp   open     oob-ws-http
-1433/tcp  open     ms-sql-s
-1723/tcp  open     pptp
-1883/tcp  open     mqtt
-2222/tcp  open     EtherNetIP-1
-3000/tcp  open     ppp
-3306/tcp  open     mysql
-5053/tcp  open     rlm
-5060/tcp  open     sip
-5061/tcp  open     sip-tls
-8080/tcp  open     http-proxy
-8888/tcp  open     sun-answerbook
-11211/tcp open     memcache
-44818/tcp open     EtherNetIP-2
-47808/tcp open     bacnet
-49288/tcp open     unknown
-51413/tcp open     unknown
-55650/tcp open     unknown
-57621/tcp open     unknown
-57622/tcp open     unknown
-61500/tcp filtered unknown
+Starting Nmap 7.97 ( https://nmap.org ) at 2025-08-06 18:34 +0000
+Nmap scan report for hi.lowf.at (66.42.81.17)
+Host is up (0.00028s latency).
+rDNS record for 66.42.81.17: 66.42.81.17.vultrusercontent.com
+Not shown: 65515 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+22/tcp    open  ssh
+23/tcp    open  telnet
+25/tcp    open  smtp
+80/tcp    open  http
+102/tcp   open  iso-tsap
+110/tcp   open  pop3
+143/tcp   open  imap
+443/tcp   open  https
+465/tcp   open  smtps
+502/tcp   open  mbap
+993/tcp   open  imaps
+995/tcp   open  pop3s
+1080/tcp  open  socks
+3306/tcp  open  mysql
+3389/tcp  open  ms-wbt-server
+5432/tcp  open  postgresql
+5900/tcp  open  vnc
+6666/tcp  open  irc
+44818/tcp open  EtherNetIP-2
 
-Nmap done: 1 IP address (1 host up) scanned in 5.33 seconds
+Nmap done: 1 IP address (1 host up) scanned in 4.42 seconds
 ```
 
 * curl

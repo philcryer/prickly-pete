@@ -71,6 +71,12 @@ checkout(){
         git clone https://github.com/cowrie/cowrie.git src/cowrie
     fi
     msg_notification "cowrie: checked out"
+
+    if [ ! -d 'src/heralding' ]; then
+        msg_status "heralding: checking out"
+        git clone https://github.com/johnnykv/heralding.git src/heralding
+    fi
+    msg_notification "heraldinge: checked out"
 }
 
 build(){
@@ -85,12 +91,16 @@ build(){
     docker compose pull
     msg_good "conpot: container built"
 
+    msg_status "heralding: building container"
+    docker compose pull
+    msg_good "heralding: container built"
+
     #git clone git@github.com:mushorg/glutton.git
     #git clone git@github.com:mushorg/tanner.git
 }
 
 volumes(){
-    echo; msg_notification "volumes and logs, saved as docker volumes"
+    echo; msg_notification "volumes: all container volumes holding logs and output data"
     tmpfile=/tmp/pp.XXXXXX
     docker_volumes=$(docker volume ls --filter "name=ppv" --format "table {{.Name}} - {{.Mountpoint}}" > $tmpfile)
     cat $tmpfile; rm $tmpfile
@@ -98,38 +108,42 @@ volumes(){
 
 ## actions
 if [[ ${1} == 'build' ]] ; then
+    msg_notification "build: building containers"
     checkout;
     build; 
 fi
 
 if [[ ${1} == 'start' ]] ; then
+    msg_notification "start: starting containers"
     checkout;
     build; 
     docker compose up -d
 fi
 
 if [[ ${1} == 'stop' ]] ; then
+    msg_notification "stop: stopping containers"
     docker compose stop
 fi
 
 if [[ ${1} == 'status' ]] ; then
-    msg_status "container statuses"
+    msg_notification "status: running containers and their ports"
     docker compose ps
     volumes;
 fi
 
 if [[ ${1} == 'logs' ]] ; then
+    msg_notification "logs: show live container logs"
     docker compose logs -f
 fi
 
 if [[ ${1} == 'clean' ]] ; then
+    msg_notification "clean: stop and bring all containers down"
     docker compose down
     volumes;
-    #docker rmi pp-conpot
-    #docker compose down --rmi all -v
 fi
 
 if [[ ${1} == 'nuke' ]] ; then
+    msg_notification "nuke: stop and bring all containers down, and remove all volumes"
     docker compose down
     docker compose down --rmi all -v
 fi
