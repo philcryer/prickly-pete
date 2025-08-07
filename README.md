@@ -2,11 +2,12 @@
 <div align="center"><img src="logo.png" alt="Prickly Pete"></div>
 
 **UPDATE** Prickly-Pete has been fully updated for 2025 (DEF CON 33). Some of the **amazing** improvements include:
-    * newer honeypot containers
-    * more ports now exposed by default
-    * ability to pre-build containers so they're ready to run when needed (`./pp build`)
-    * logs and all output collected as docker volumes now, output shows you were the files/directories are saved to (`./pp volumes`)
-    * also, DEF CON is still canceled 
+
+* newer honeypot containers
+* more ports now exposed by default
+* ability to pre-build containers so they're ready to run when needed (`./pp build`)
+* logs and all output collected as docker volumes now, output shows you were the files/directories are saved to (`./pp volumes`)
+* however, DEF CON is still canceled 
 
 ## Overview 
 Prickly-Pete is a script that uses [Docker](https://www.docker.com) to quickly bring up some honeypots exposing a bunch of services. For research, reconnaissance and fun. While originally built to run on a laptop during the [DEF CON](https://defcon.org/) hacker conference to see how many pings and pokes we could attract, it's a useful tool for research, and reconnaissance to test networks for infestations. Using Docker and [Docker-Compose](https://docs.docker.com/compose/) to containerize all the honeypot services greatly speeding up deployment time while reducing system requirements. 
