@@ -1,6 +1,6 @@
 # prickly-pete
 <div align="center"><img src="logo.png" alt="Prickly Pete">
-&nbsp;&nbsp;<img src="https://store.eventcapture.com/cdn/shop/files/DC33-web_logo_2400x.jpg" height="390"></div>
+&nbsp;+&nbsp;<img src="https://store.eventcapture.com/cdn/shop/files/DC33-web_logo_2400x.jpg" height="287" width="300"></div>
 
 **UPDATE** Prickly-Pete has been fully updated for 2025 (DEF CON 33). Some of the **amazing** improvements include:
 
