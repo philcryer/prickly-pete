@@ -3,8 +3,8 @@
 
 **UPDATE** Prickly-Pete has been fully updated for 2025 (DEF CON 33). Some of the **amazing** improvements include:
 
-* newer honeypot containers
-* more ports now exposed by default
+* newer honeypot containers, with updated code and builds 
+* more ports now exposed by default (**23** at last count)
 * ability to pre-build containers so they're ready to run when needed (`./pp build`)
 * logs and all output collected as docker volumes now, output shows you were the files/directories are saved to (`./pp volumes`)
 * however, DEF CON is still canceled 
