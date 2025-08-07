@@ -47,14 +47,14 @@ services:
     volumes:
       - ppv-heralding-var:/var/log
 
-  honeyaml:
-    image: mmta/honeyaml
-    #build: ./src/honeyaml/docker
-    ports:
-      - 8080:8080
-    restart: unless-stopped
-    volumes:
-      - ppv-honeyaml-var:/honeyaml/logs
+#  honeyaml:
+#    image: mmta/honeyaml
+#    #build: ./src/honeyaml/docker
+#    ports:
+#      - 8080:8080
+#    restart: unless-stopped
+#    volumes:
+#      - ppv-honeyaml-var:/honeyaml/logs
 
   #ciscoasa_honeypot:
   #  build: src/ciscoasa_honeypot
@@ -113,7 +113,8 @@ volumes:
   ppv-cowrie-var:
   ppv-conpot-var:
   ppv-heralding-var:
-  ppv-honeyaml-var:
+
+#  ppv-honeyaml-var:
 #  ppv-ddospot-bl:
 #  ppv-ddospot-db:
 #  ppv-ddospot-logs:

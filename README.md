@@ -44,12 +44,12 @@ Build all the honeypot services
 ./pp build
 ```
 
-* Start
+* Up
 
-Start all the honeypot services (implies `build`)
+Up starts all the honeypot services (implies `build`)
 
 ```
-./pp start
+./pp up
 ```
 
 * Status

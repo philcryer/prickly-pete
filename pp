@@ -25,10 +25,10 @@ function msg_notification () {
 
 ## usage
 usage() { 
-    echo "Usage: pp [build] [start] [stop] [status] [logs] [clean] [nuke]"
+    echo "Usage: pp [build] [up] [down] [status] [logs] [clean] [nuke]"
     echo "  build: build projects"
-    echo "  start: start, and build if required, all containers"
-    echo "  stop: stop all containers"
+    echo "  up: start, and build if required, all containers"
+    echo "  down: stop all containers"
     echo "  status: show the running status of all containers"
     echo "  scan: scan ports on localhost (requires nmap)"
     echo "  logs: show live logs from all containers"
@@ -120,7 +120,9 @@ build(){
     msg_good "heralding: container built"
 
     msg_status "honeyaml: building container"
-    docker compose pull
+    cd src/honeyaml
+    #docker compose pull
+    docker compose build
     msg_good "honeyaml: container built"
 
     #msg_status "ciscoasa_honeypot: building container"
@@ -146,15 +148,15 @@ if [[ ${1} == 'build' ]] ; then
     build; 
 fi
 
-if [[ ${1} == 'start' ]] ; then
-    msg_notification "start: starting containers"
+if [[ ${1} == 'up' ]] ; then
+    msg_notification "up: starting containers"
     checkout;
     build; 
     docker compose up -d
 fi
 
-if [[ ${1} == 'stop' ]] ; then
-    msg_notification "stop: stopping containers"
+if [[ ${1} == 'down' ]] ; then
+    msg_notification "down: stopping containers"
     docker compose stop
 fi
 
